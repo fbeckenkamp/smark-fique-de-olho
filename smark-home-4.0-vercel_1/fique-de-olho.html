@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Fique de olho</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0;font-family:'Geist',system-ui,sans-serif;background:#EEEEEE;color:#333333}
+a{color:#0073AD;text-decoration:none}a:hover{color:#005A87}
+button{font-family:inherit;cursor:pointer}
+input,textarea{font-family:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@keyframes fdoPulse{0%{opacity:.45}50%{opacity:1}100%{opacity:.45}}
+.sk{animation:fdoPulse 1.1s ease-in-out infinite}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1500px; display: grid; grid-template-columns: 240px minmax(0, 1fr); background: #EEEEEE; font-family: 'Geist', system-ui, sans-serif; color: #333333;">
+
+<!-- SIDEBAR -->
+<nav aria-label="Principal" style="background: #0073AD; color: #E6F2F9; display: flex; flex-direction: column; padding: 24px 16px; gap: 28px;">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px;">
+<div style="width: 32px; height: 32px; border-radius: 9px; background: #F18F2B; display: flex; align-items: center; justify-content: center; color: #ffffff; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 18px;">S</div>
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 20px; color: #ffffff; letter-spacing: -0.01em;">Smark</div>
+<div style="margin-left: auto; font-size: 11px; padding: 2px 7px; border: 1px solid #4D93BC; border-radius: 99px; color: #CFE6F3;">4.0</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px;">
+<a href="index.html" style="display: flex; align-items: center; gap: 12px; padding: 0 12px; height: 44px; border-radius: 10px; color: #E6F2F9; font-size: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Início</a>
+<a href="fique-de-olho.html" aria-current="page" style="display: flex; align-items: center; gap: 12px; padding: 0 12px; height: 44px; border-radius: 10px; background: #DAEAF4; color: #0073AD; font-size: 14px; font-weight: 600;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Fique de olho<span style="margin-left: auto; font-size: 12px; background: #A24037; color: #ffffff; border-radius: 99px; padding: 1px 8px; font-weight: 600;">{{lateTotal}}</span></a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; padding: 0 12px; height: 44px; border-radius: 10px; color: #E6F2F9; font-size: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Agenda</a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; padding: 0 12px; height: 44px; border-radius: 10px; color: #E6F2F9; font-size: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5M16 4.8a3.5 3.5 0 0 1 0 6.4M18.5 14.8c1.6.8 2.6 2.6 3 5.2"/></svg>Leads</a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; padding: 0 12px; height: 44px; border-radius: 10px; color: #E6F2F9; font-size: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h4v14H4zM10 5h4v9h-4zM16 5h4v5h-4z"/></svg>Oportunidades</a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; padding: 0 12px; height: 44px; border-radius: 10px; color: #E6F2F9; font-size: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V6a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v15M14 10h5a1 1 0 0 1 1 1v10M2.5 21h19M8 9h2M8 13h2M8 17h2"/></svg>Empresas</a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; padding: 0 12px; height: 44px; border-radius: 10px; color: #E6F2F9; font-size: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>Propostas</a>
+<a href="#" style="display: flex; align-items: center; gap: 12px; padding: 0 12px; height: 44px; border-radius: 10px; color: #E6F2F9; font-size: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Relatórios</a>
+</div>
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 16px;">
+<div style="background: #005A87; border: 1px solid #1E6F9B; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+<div style="font-size: 12px; color: #CFE6F3;">Sua meta de setembro</div>
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 600; color: #ffffff;">69%</div>
+<div style="height: 6px; background: #1E6F9B; border-radius: 99px; overflow: hidden;"><div style="width: 69%; height: 6px; background: #F18F2B; border-radius: 99px;"></div></div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px;">
+<div style="width: 36px; height: 36px; border-radius: 99px; background: #E9D8C6; color: #5B3A1E; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">AS</div>
+<div style="display: flex; flex-direction: column;">
+<div style="font-size: 14px; color: #ffffff; font-weight: 500;">Ana Souza</div>
+<div style="font-size: 12px; color: #CFE6F3;">Consultora · Time Sul</div>
+</div>
+</div>
+</div>
+</nav>
+
+<!-- MAIN -->
+<main style="padding: 24px 40px 40px; display: flex; flex-direction: column; gap: 20px; min-width: 0;">
+
+<!-- Title + date navigator -->
+<div style="display: flex; align-items: flex-end; gap: 24px;">
+<div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1;">
+<div style="font-size: 13px; color: #66737D; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500;">Quarta-feira, 23 de setembro</div>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 38px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1;">Fique de olho</h1>
+<p style="margin: 0; font-size: 15px; color: #5F5F5F;">Follow-ups, agendamentos e tarefas em sequência. Selecione uma atividade para executá-la.</p>
+</div>
+<div style="display: flex; align-items: center; gap: 8px;">
+<button type="button" aria-label="Dia anterior" onClick="{{prevDay}}" style="width: 44px; height: 44px; border-radius: 12px; background: #ffffff; border: 1px solid #DDDDDD; color: #333333; display: flex; align-items: center; justify-content: center;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></button>
+<div style="width: 220px; height: 44px; box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid #DDDDDD; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2;">
+<span style="font-size: 14px; font-weight: 600; color: #333333;">{{navTitle}}</span>
+<span style="font-size: 12px; color: #66737D;">{{navSub}}</span>
+</div>
+<button type="button" aria-label="Próximo dia" onClick="{{nextDay}}" style="width: 44px; height: 44px; border-radius: 12px; background: #ffffff; border: 1px solid #DDDDDD; color: #333333; display: flex; align-items: center; justify-content: center;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg></button>
+<button type="button" onClick="{{goToday}}" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #EEEEEE; border: 1px solid #D4D4D4; color: #333333; font-size: 14px; font-weight: 600;">Hoje</button>
+</div>
+</div>
+
+<!-- Totalizer bar -->
+<section aria-label="Totalizadores" style="background: #ffffff; border: 1px solid #DDDDDD; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column;">
+<div aria-hidden="true" style="display: flex; height: 6px; background: #EAEBEF;">
+<sc-for list="{{buckets}}" as="b" hint-placeholder-count="4">
+<div style="height: 6px; width: {{b.pct}}; background: {{b.bar}};"></div>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));">
+<sc-for list="{{buckets}}" as="b" hint-placeholder-count="4">
+<button type="button" onClick="{{b.pick}}" aria-pressed="{{b.pressed}}" style="text-align: left; border: 0; border-left: {{b.divider}}; background: {{b.bg}}; box-shadow: inset 0 -3px 0 {{b.ring}}; padding: 16px 20px 18px; display: flex; flex-direction: column; gap: 6px; color: #333333;">
+<span style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #333333;"><span style="width: 10px; height: 10px; border-radius: 3px; background: {{b.bar}};"></span>{{b.label}}<span style="margin-left: auto; font-size: 12px; font-weight: 400; color: #66737D;">{{b.range}}</span></span>
+<span style="display: flex; align-items: baseline; gap: 8px;"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 32px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; color: {{b.fg}};">{{b.count}}</span><span style="font-size: 13px; color: #5F5F5F;">{{b.unit}}</span></span>
+<span style="font-size: 12px; color: #66737D;">{{b.breakdown}}</span>
+</button>
+</sc-for>
+</div>
+</section>
+
+<!-- List + execution -->
+<div style="display: grid; grid-template-columns: 404px minmax(0, 1fr); gap: 24px; align-items: start;">
+
+<!-- Activity list -->
+<section aria-label="Atividades" style="background: #ffffff; border: 1px solid #DDDDDD; border-radius: 18px; padding: 20px 16px 16px; display: flex; flex-direction: column; gap: 14px; height: 1160px; box-sizing: border-box;">
+<div style="display: flex; align-items: baseline; gap: 10px; padding: 0 4px;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600;">{{listTitle}}</h2>
+<span style="font-size: 13px; color: #66737D;">{{listSub}}</span>
+</div>
+<div role="group" aria-label="Filtrar por tipo" style="display: flex; gap: 6px; flex-wrap: wrap; padding: 0 4px;">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{f.pressed}}" onClick="{{f.pick}}" style="height: 34px; padding: 0 12px; border-radius: 99px; border: 1px solid {{f.bd}}; background: {{f.bg}}; color: {{f.fg}}; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px;">{{f.label}}<span style="font-size: 12px; opacity: 0.85;">{{f.count}}</span></button>
+</sc-for>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 0 2px; min-height: 0;">
+<sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
+<div style="margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; color: #66737D; padding: 0 24px;">
+<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#B5BDC4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16.5 9.5"/></svg>
+<div style="font-size: 15px; font-weight: 600; color: #333333;">Nada por aqui</div>
+<div style="font-size: 13px;">Nenhuma atividade para este período com o filtro atual.</div>
+</div>
+</sc-if>
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; align-items: center; gap: 8px; padding: 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; color: {{g.fg}};">{{g.label}}<span style="font-weight: 400; text-transform: none; letter-spacing: 0; color: #66737D;">{{g.sub}}</span></div>
+<sc-for list="{{g.items}}" as="it" hint-placeholder-count="4">
+<button type="button" onClick="{{it.pick}}" aria-current="{{it.current}}" style="width: 100%; text-align: left; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid {{it.bd}}; background: {{it.bg}}; color: #333333;">
+<span style="width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: {{it.tileBg}}; color: {{it.tileFg}};">
+<sc-if value="{{it.showDone}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></sc-if>
+<sc-if value="{{it.showFu}}" hint-placeholder-val="{{true}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></sc-if>
+<sc-if value="{{it.showAg}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg></sc-if>
+<sc-if value="{{it.showTa}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="m8 12 3 3 5-6"/></svg></sc-if>
+</span>
+<span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0;">
+<span style="font-size: 14px; font-weight: 600; color: {{it.titleFg}}; text-decoration: {{it.deco}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{it.title}}</span>
+<span style="font-size: 12px; color: #66737D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{it.typeLabel}} · {{it.ch}} · {{it.company}}</span>
+</span>
+<span style="font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 99px; white-space: nowrap; background: {{it.tagBg}}; color: {{it.tagFg}}; font-family: {{it.tagFont}};">{{it.tag}}</span>
+</button>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</section>
+
+<!-- Execution panel -->
+<section aria-label="Executar atividade" style="background: #ffffff; border: 1px solid #DDDDDD; border-radius: 18px; padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 20px; min-height: 1160px; box-sizing: border-box;">
+
+<!-- Activity header -->
+<div style="display: flex; align-items: flex-start; gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 8px; flex-grow: 1; min-width: 0;">
+<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+<span style="font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 99px; background: {{sel.tileBg}}; color: {{sel.tileFg}};">{{sel.typeLabel}} · {{sel.ch}}</span>
+<span style="font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 99px; background: {{sel.statusBg}}; color: {{sel.statusFg}};">{{sel.status}}</span>
+</div>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2;">{{sel.title}}</h2>
+<div style="font-size: 14px; color: #5F5F5F;">{{sel.contact}} · <a href="#" style="color: #0073AD; font-weight: 500;">{{sel.company}}</a></div>
+</div>
+<div style="display: flex; gap: 8px; flex-shrink: 0;">
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 10px; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Reagendar</button>
+<sc-if value="{{sel.canComplete}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{complete}}" style="height: 40px; padding: 0 14px; border-radius: 10px; background: #EEEEEE; border: 1px solid #D4D4D4; color: #333333; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Concluir</button>
+</sc-if>
+<sc-if value="{{sel.isDone}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{reopen}}" style="height: 40px; padding: 0 14px; border-radius: 10px; background: #E3F1E4; border: 1px solid #BFDCC1; color: #256A29; font-size: 13px; font-weight: 600;">Concluída · reabrir</button>
+</sc-if>
+</div>
+</div>
+
+<!-- Context -->
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+<sc-for list="{{sel.ctx}}" as="c" hint-placeholder-count="3">
+<div style="background: #F5F5F5; border: 1px solid #EAEBEF; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 12px; color: #66737D;">{{c.k}}</span>
+<span style="font-size: 14px; color: #333333; line-height: 1.4;">{{c.v}}</span>
+</div>
+</sc-for>
+</div>
+
+<!-- EMAIL FOLLOW-UP WITH MARK -->
+<sc-if value="{{isKato}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 16px; border: 1px solid #E4D3EC; border-radius: 16px; padding: 20px; background: #FCF9FD;">
+
+<div style="display: flex; align-items: center; gap: 12px;">
+<span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 99px; background: linear-gradient(135deg, #00C2D6 0%, #8A1CA3 100%); display: flex; align-items: center; justify-content: center; color: #ffffff; flex-shrink: 0;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M12 8l1.4 2.6L16 12l-2.6 1.4L12 16l-1.4-2.6L8 12l2.6-1.4z"/></svg></span>
+<div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1;">
+<span style="font-size: 15px; font-weight: 600; color: #333333;"><span style="color: #8A1CA3;">Mark</span> escreveu um rascunho de follow-up</span>
+<span style="font-size: 13px; color: #5F5F5F;">Com base nas notas da demonstração de 18/09, no histórico de e-mails e na oportunidade.</span>
+</div>
+<sc-if value="{{hasRevTag}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 12px; font-weight: 600; color: #8A1CA3; background: #F1E4F6; padding: 4px 10px; border-radius: 99px; white-space: nowrap;">{{revTag}}</span>
+</sc-if>
+</div>
+
+<sc-if value="{{isSent}}" hint-placeholder-val="{{false}}">
+<div style="background: #ffffff; border: 1px solid #BFDCC1; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; align-items: center; gap: 12px;">
+<span style="width: 40px; height: 40px; border-radius: 99px; background: #E3F1E4; color: #256A29; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+<div style="display: flex; flex-direction: column; gap: 2px;">
+<span style="font-size: 17px; font-weight: 600; color: #333333;">E-mail enviado para Beatriz Kato</span>
+<span style="font-size: 13px; color: #5F5F5F;">beatriz.kato@katoalimentos.com.br · registrado no histórico da oportunidade</span>
+</div>
+</div>
+<div style="font-size: 14px; color: #333333; background: #F5F5F5; border-radius: 10px; padding: 12px 14px;">Assunto: <strong style="font-weight: 600;">{{subject}}</strong></div>
+<sc-if value="{{followNext}}" hint-placeholder-val="{{true}}">
+<div style="font-size: 14px; color: #5F5F5F; display: flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0073AD" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>Próximo follow-up criado para seg, 28/09, caso não haja resposta.</div>
+</sc-if>
+<div style="display: flex; gap: 10px; margin-top: 4px;">
+<button type="button" onClick="{{goNext}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: {{accent}}; color: #ffffff; border: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">Próxima atividade<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+<button type="button" onClick="{{undoSend}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #ffffff; color: #333333; border: 1px solid #D4D4D4; font-size: 14px; font-weight: 600;">Desfazer envio</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isComposing}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 16px;">
+
+<!-- Revise -->
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Revisar com o Mark</span>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<sc-for list="{{chips}}" as="ch" hint-placeholder-count="4">
+<button type="button" onClick="{{ch.pick}}" disabled="{{isGenerating}}" style="height: 34px; padding: 0 12px; border-radius: 99px; border: 1px solid {{ch.bd}}; background: {{ch.bg}}; color: {{ch.fg}}; font-size: 13px; font-weight: 500;">{{ch.label}}</button>
+</sc-for>
+</div>
+<div style="display: flex; gap: 8px;">
+<label style="flex-grow: 1; height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 14px; background: #ffffff; border: 1px solid #DDDDDD; border-radius: 12px; box-sizing: border-box; color: #66737D;">
+<span class="sr">Pedir ajuste ao Mark</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A1CA3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8l1.4 2.6L16 12l-2.6 1.4L12 16l-1.4-2.6L8 12l2.6-1.4z"/></svg>
+<input type="text" value="{{instr}}" onChange="{{onInstr}}" placeholder="Peça um ajuste… ex.: mencione o desconto para pagamento à vista" style="border: 0; outline: none; flex-grow: 1; font-size: 14px; background: transparent; color: #333333;">
+</label>
+<button type="button" onClick="{{applyInstr}}" disabled="{{isGenerating}}" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #C9A6D8; color: #8A1CA3; font-size: 14px; font-weight: 600;">Aplicar</button>
+<button type="button" onClick="{{regen}}" disabled="{{isGenerating}}" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></svg>Regerar</button>
+</div>
+</div>
+
+<!-- Composer -->
+<div style="background: #ffffff; border: 1px solid #DDDDDD; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden;">
+<div style="display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid #EAEBEF; font-size: 14px;">
+<span style="width: 60px; color: #66737D;">Para</span>
+<span style="display: flex; align-items: center; gap: 6px; background: #EEEEEE; border-radius: 99px; padding: 3px 10px 3px 4px; font-size: 13px;"><span style="width: 22px; height: 22px; border-radius: 99px; background: #F1E4F6; color: #8A1CA3; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center;">BK</span>Beatriz Kato &lt;beatriz.kato@katoalimentos.com.br&gt;</span>
+<span style="margin-left: auto; font-size: 13px; color: #66737D;">Cc Tiago Nunes (TI)</span>
+</div>
+<label style="display: flex; align-items: center; gap: 10px; padding: 0 16px; height: 46px; border-bottom: 1px solid #EAEBEF; font-size: 14px;">
+<span style="width: 60px; color: #66737D;">Assunto</span>
+<input type="text" value="{{subject}}" onChange="{{onSubject}}" style="border: 0; outline: none; flex-grow: 1; font-size: 14px; font-weight: 600; color: #333333; background: transparent;">
+</label>
+<sc-if value="{{isGenerating}}" hint-placeholder-val="{{false}}">
+<div role="status" style="padding: 18px 16px; height: 380px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;">
+<span style="font-size: 13px; color: #8A1CA3; font-weight: 500;">Mark está reescrevendo o e-mail…</span>
+<div class="sk" style="height: 12px; width: 38%; border-radius: 6px; background: #EFE3F4;"></div>
+<div class="sk" style="height: 12px; width: 92%; border-radius: 6px; background: #EFE3F4;"></div>
+<div class="sk" style="height: 12px; width: 86%; border-radius: 6px; background: #EFE3F4;"></div>
+<div class="sk" style="height: 12px; width: 64%; border-radius: 6px; background: #EFE3F4;"></div>
+<div class="sk" style="height: 12px; width: 90%; border-radius: 6px; background: #EFE3F4; margin-top: 8px;"></div>
+<div class="sk" style="height: 12px; width: 78%; border-radius: 6px; background: #EFE3F4;"></div>
+<div class="sk" style="height: 12px; width: 30%; border-radius: 6px; background: #EFE3F4; margin-top: 8px;"></div>
+</div>
+</sc-if>
+<sc-if value="{{isReady}}" hint-placeholder-val="{{true}}">
+<label style="display: block;">
+<span class="sr">Corpo do e-mail</span>
+<textarea value="{{body}}" onChange="{{onBody}}" style="display: block; width: 100%; height: 380px; box-sizing: border-box; border: 0; outline: none; resize: none; padding: 16px; font-size: 14px; line-height: 1.6; color: #333333; background: #ffffff;"></textarea>
+</label>
+</sc-if>
+<div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-top: 1px solid #EAEBEF; background: #FBFBFB;">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5F5F5F;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m20.5 11.5-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></svg>Proposta_Kato_v2.pdf</span>
+<span style="margin-left: auto; font-size: 12px; color: #66737D;">{{wordCount}} palavras</span>
+</div>
+</div>
+
+<!-- Send row -->
+<div style="display: flex; align-items: center; gap: 10px;">
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #333333; cursor: pointer;">
+<input type="checkbox" checked="{{followNext}}" onChange="{{toggleFollow}}" style="width: 18px; height: 18px; margin: 0; accent-color: #0073AD;">Criar próximo follow-up em 3 dias úteis se não houver resposta</label>
+<button type="button" style="margin-left: auto; height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; font-size: 14px; font-weight: 600;">Salvar rascunho</button>
+<button type="button" onClick="{{send}}" disabled="{{isGenerating}}" style="height: 44px; padding: 0 20px; border-radius: 12px; background: {{accent}}; color: #ffffff; border: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/></svg>Enviar e-mail</button>
+</div>
+
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<!-- GENERIC ACTIVITY -->
+<sc-if value="{{isGeneric}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Descrição</span>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #333333;">{{sel.desc}}</p>
+</div>
+<div style="display: flex; gap: 12px; align-items: flex-start; border: 1px solid #E4D3EC; border-radius: 14px; padding: 16px; background: #FCF9FD;">
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 99px; background: linear-gradient(135deg, #00C2D6 0%, #8A1CA3 100%); display: flex; align-items: center; justify-content: center; color: #ffffff; flex-shrink: 0;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M12 8l1.4 2.6L16 12l-2.6 1.4L12 16l-1.4-2.6L8 12l2.6-1.4z"/></svg></span>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 14px; font-weight: 600; color: #8A1CA3;">Mark sugere</span>
+<span style="font-size: 14px; line-height: 1.5; color: #333333;">{{sel.tip}}</span>
+</div>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Registrar resultado</span>
+<textarea placeholder="O que aconteceu? Ex.: cliente pediu retorno na próxima semana." style="width: 100%; height: 120px; box-sizing: border-box; border: 1px solid #DDDDDD; border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; resize: none; outline: none; color: #333333;"></textarea>
+</label>
+<div style="display: flex; gap: 10px; justify-content: flex-end;">
+<button type="button" onClick="{{goNext}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; font-size: 14px; font-weight: 600;">Pular</button>
+<button type="button" onClick="{{complete}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: {{accent}}; color: #ffffff; border: 0; font-size: 14px; font-weight: 600;">Concluir e ir para a próxima</button>
+</div>
+</div>
+</sc-if>
+
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#0073AD","options":["#0073AD","#005A87","#8A1CA3","#2E7D32"]},"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true };
+    this.timer = null;
+    function C(k, v) { return { k: k, v: v }; }
+    this.items = [
+      { id: 'l1', off: -24, time: '', type: 'ta', ch: 'CRM', title: 'Atualizar cadastro de decisores', company: 'Farias & Cia Contabilidade', contact: 'Rodrigo Farias', desc: 'Completar e-mail e cargo dos dois decisores que participarão da demonstração.', tip: 'Encontrei os dois contatos no site da empresa: Helena Farias (sócia) e Marcos Tavares (financeiro). Confirme para atualizar o cadastro.', ctx: [C('Oportunidade', 'Plano Starter · R$ 9.600'), C('Etapa', 'Qualificação'), C('Pendência', '2 decisores sem e-mail')] },
+      { id: 'l2', off: -17, time: '09:00', type: 'fu', ch: 'Ligação', title: 'Retomar contato após pausa no projeto', company: 'Agropecuária Serra Verde', contact: 'Sérgio Pontes', desc: 'Sérgio pediu para retomar a conversa em setembro, após o fechamento da safra.', tip: 'Roteiro: pergunte se o orçamento de TI foi liberado e se a prioridade continua a mesma. Ele costuma atender entre 8h e 10h.', ctx: [C('Oportunidade', 'Plano Pro · R$ 52.000'), C('Etapa', 'Negociação (pausada)'), C('Último contato', 'Ligação em 19/08')] },
+      { id: 'l3', off: -15, time: '', type: 'fu', ch: 'E-mail', title: 'Enviar pesquisa de satisfação de 30 dias', company: 'Nexa Logística', contact: 'Luciana Prado', desc: 'Pesquisa de satisfação do primeiro mês de uso.', tip: 'Preparei um e-mail curto com o link da pesquisa NPS. Sugiro enviar junto do contrato revisado, que também está pendente.', ctx: [C('Cliente desde', '10/08/2026'), C('Plano', 'Pro · 3 usuários'), C('Saúde da conta', 'Boa · uso diário')] },
+      { id: 'l4', off: -9, time: '', type: 'ta', ch: 'Financeiro', title: 'Conferir NF de implantação', company: 'Metalúrgica Andrade', contact: 'Rafael Lima', desc: 'Validar com o financeiro se a nota de implantação foi emitida com o CNPJ correto.', tip: 'A NF 4.812 foi emitida em 12/09 com o CNPJ da matriz. Rafael pediu a filial de Caxias do Sul.', ctx: [C('Oportunidade', 'Plano Pro · R$ 61.200'), C('Etapa', 'Ganha'), C('Pendência', 'CNPJ da filial')] },
+      { id: 'l5', off: -6, time: '15:00', type: 'ag', ch: 'Reunião', title: 'Alinhamento de onboarding (não realizada)', company: 'Café Brasil Distribuidora', contact: 'Mônica Reis', desc: 'Reunião de alinhamento do onboarding que não aconteceu.', tip: 'Sex, 25/09 às 15h está livre na sua agenda e na da Mônica. Quer que eu envie o convite?', ctx: [C('Cliente desde', '01/09/2026'), C('Onboarding', 'Etapa 2 de 4'), C('Último contato', 'WhatsApp hoje, 09:15')] },
+      { id: 'l6', off: -2, time: '10:00', type: 'fu', ch: 'Ligação', title: 'Follow-up pós-demonstração', company: 'TecnoAgro', contact: 'Fernanda Luz', desc: 'Entender a percepção da equipe sobre a demonstração e mapear próximos passos.', tip: 'Fernanda abriu a proposta 3 vezes ontem. Bom momento para ligar e perguntar sobre as dúvidas de preço.', ctx: [C('Oportunidade', 'Plano Pro · R$ 44.000'), C('Etapa', 'Demonstração'), C('Sinal', 'Proposta aberta 3x')] },
+      { id: 'l7', off: -1, time: '', type: 'ta', ch: 'E-mail', title: 'Enviar contrato revisado', company: 'Nexa Logística', contact: 'Luciana Prado', desc: 'Enviar a versão do contrato com a cláusula de SLA ajustada pelo jurídico.', tip: 'O contrato v2 está anexado à oportunidade. Posso escrever o e-mail explicando as mudanças na cláusula 7.', ctx: [C('Oportunidade', 'Expansão · R$ 18.000'), C('Etapa', 'Contrato'), C('Anexo', 'Contrato_Nexa_v2.pdf')] },
+      { id: 'l8', off: -1, time: '', type: 'ta', ch: 'CRM', title: 'Atualizar valor da oportunidade', company: 'Clínica Santé', contact: 'Dr. Henrique Alves', desc: 'Ajustar o valor após a inclusão de mais 2 usuários.', tip: 'Com 5 usuários no Plano Pro, o novo valor anual é R$ 27.000.', ctx: [C('Oportunidade', 'Plano Pro · R$ 21.600'), C('Etapa', 'Proposta'), C('Mudança', '+2 usuários')] },
+      { id: 't0', off: 0, time: '08:30', type: 'ag', ch: 'Ligação', title: 'Retorno sobre demonstração', company: 'Nexa Logística', contact: 'Luciana Prado', desc: 'Ligação de retorno.', tip: 'Concluída às 08:42.', ctx: [C('Duração', '12 min'), C('Resultado', 'Positivo'), C('Próximo passo', 'Enviar contrato')] },
+      { id: 't1', off: 0, time: '09:15', type: 'ag', ch: 'WhatsApp', title: 'Confirmar visita técnica', company: 'Café Brasil Distribuidora', contact: 'Mônica Reis', desc: 'Confirmar a visita técnica.', tip: 'Concluída às 09:20.', ctx: [C('Resultado', 'Confirmada'), C('Visita', 'Sex, 25/09 · 15:00'), C('Canal', 'WhatsApp')] },
+      { id: 'f1', off: 0, time: '10:00', type: 'fu', ch: 'E-mail', title: 'Follow-up pós-demonstração', company: 'Kato Alimentos', contact: 'Beatriz Kato, Gerente Comercial', desc: '', tip: '', ctx: [C('Oportunidade', 'Plano Pro · R$ 38.400 · Demonstração'), C('Última interação', 'Demo online em 18/09 · pediu integração com ERP e prazo'), C('Sem resposta há', '5 dias · abriu o último e-mail 2x')] },
+      { id: 't2', off: 0, time: '10:30', type: 'ag', ch: 'Reunião online', title: 'Apresentação de proposta', company: 'Grupo Vértice', contact: 'Marina Duarte', desc: 'Apresentar a proposta v3 para Marina Duarte e Paulo Teixeira.', tip: 'A objeção em aberto é o prazo de implantação de 60 dias. Leve o cronograma em fases, que reduz para 35 dias.', ctx: [C('Oportunidade', 'R$ 84.000'), C('Etapa', 'Negociação'), C('Horário', '10:30 – 11:15 · Meet')] },
+      { id: 't3', off: 0, time: '11:30', type: 'ta', ch: 'Ligação', title: 'Ligar para Rafael Lima antes da visita', company: 'Metalúrgica Andrade', contact: 'Rafael Lima', desc: 'Confirmar participantes e pauta do diagnóstico presencial das 14:00.', tip: 'Pergunte se o gerente de produção vai participar: ele é o principal usuário do módulo de pedidos.', ctx: [C('Visita', 'Hoje, 14:00'), C('Local', 'Caxias do Sul'), C('Pauta', 'Diagnóstico de processos')] },
+      { id: 't4', off: 0, time: '12:00', type: 'fu', ch: 'E-mail', title: 'Responder dúvida sobre desconto à vista', company: 'Grupo Vértice', contact: 'Paulo Teixeira', desc: 'Paulo pediu condições para pagamento à vista (e-mail de 21/09).', tip: 'A política permite até 8% à vista. Sugiro responder depois da reunião das 10:30, alinhado com a Marina.', ctx: [C('Oportunidade', 'R$ 84.000'), C('Pedido', 'Desconto à vista'), C('Política', 'Até 8%')] },
+      { id: 't5', off: 0, time: '13:00', type: 'ta', ch: 'WhatsApp', title: 'Enviar material de onboarding', company: 'Café Brasil Distribuidora', contact: 'Mônica Reis', desc: 'Enviar o guia de primeiros passos e o link dos treinamentos gravados.', tip: 'O guia em PDF e a trilha de vídeos estão na biblioteca de conteúdos. Posso montar a mensagem.', ctx: [C('Onboarding', 'Etapa 2 de 4'), C('Usuários', '6 ativos'), C('Canal', 'WhatsApp')] },
+      { id: 't6', off: 0, time: '14:00', type: 'ag', ch: 'Visita', title: 'Diagnóstico presencial', company: 'Metalúrgica Andrade', contact: 'Rafael Lima', desc: 'Mapear processos comerciais e de pedidos na unidade de Caxias do Sul.', tip: 'Saia até 13:15: há previsão de trânsito lento na BR-116.', ctx: [C('Horário', '14:00 – 16:00'), C('Local', 'Caxias do Sul'), C('Participantes', '3 confirmados')] },
+      { id: 't7', off: 0, time: '15:30', type: 'ag', ch: 'Ligação', title: 'Qualificação de lead', company: 'Clínica Santé', contact: 'Dr. Henrique Alves', desc: 'Qualificar a necessidade da nova unidade.', tip: 'Use o roteiro BANT. A clínica abriu uma segunda unidade em agosto.', ctx: [C('Origem', 'Indicação'), C('Interesse', 'Plano Pro'), C('Horário', '15:30 – 16:00')] },
+      { id: 't8', off: 0, time: '16:00', type: 'ta', ch: 'CRM', title: 'Registrar notas do diagnóstico', company: 'Metalúrgica Andrade', contact: 'Rafael Lima', desc: 'Registrar as notas da visita na oportunidade.', tip: 'Depois da visita, grave um áudio: eu transcrevo e organizo as notas na oportunidade.', ctx: [C('Oportunidade', 'Expansão · R$ 22.000'), C('Etapa', 'Diagnóstico'), C('Depende de', 'Visita das 14:00')] },
+      { id: 't9', off: 0, time: '16:30', type: 'fu', ch: 'WhatsApp', title: 'Confirmar recebimento da proposta', company: 'Transportes Rota Sul', contact: 'Carlos Mendes', desc: 'Confirmar se Carlos recebeu a proposta de integração com ERP.', tip: 'Mensagem sugerida: “Oi, Carlos! Conseguiu ver a proposta que enviei? Posso tirar alguma dúvida hoje?”', ctx: [C('Oportunidade', 'Integração ERP · R$ 29.000'), C('Etapa', 'Proposta'), C('Enviada em', '21/09')] },
+      { id: 't10', off: 0, time: '17:00', type: 'ag', ch: 'Reunião interna', title: 'Forecast semanal', company: 'Time Sul', contact: 'Gestão comercial', desc: 'Revisão do forecast da semana.', tip: 'Seu forecast está em R$ 196 mil para setembro. Atualize Vértice e Kato antes da reunião.', ctx: [C('Horário', '17:00 – 17:45'), C('Pauta', 'Forecast e riscos'), C('Local', 'Sala 3')] },
+      { id: 't11', off: 0, time: '17:30', type: 'ta', ch: 'Ligação', title: 'Qualificar lead inbound', company: 'Sollar Energia', contact: 'Juliana Ramos', desc: 'Primeiro contato com o lead que chegou pelo formulário do site.', tip: 'O lead está há mais de 2 h sem resposta. Considere ligar antes do horário previsto.', ctx: [C('Origem', 'Formulário do site'), C('Interesse', 'Plano Pro'), C('Aguardando', '2 h 10')] },
+      { id: 'n1', off: 1, time: '10:00', type: 'ag', ch: 'Reunião', title: 'Revisar escopo com pré-vendas', company: 'Kato Alimentos', contact: 'Beatriz Kato', desc: 'Alinhar escopo técnico da integração com ERP.', tip: 'Depende da resposta da Beatriz ao follow-up de hoje.', ctx: [C('Horário', '10:00 – 10:30'), C('Participantes', 'Pré-vendas'), C('Oportunidade', 'R$ 38.400')] },
+      { id: 'n2', off: 1, time: '', type: 'ta', ch: 'Proposta', title: 'Preparar proposta comercial', company: 'Transportes Rota Sul', contact: 'Carlos Mendes', desc: 'Versão final da proposta com o módulo de integração.', tip: 'Posso gerar a proposta a partir do modelo “Integração ERP”.', ctx: [C('Oportunidade', 'R$ 29.000'), C('Etapa', 'Proposta'), C('Modelo', 'Integração ERP')] },
+      { id: 'n3', off: 2, time: '11:00', type: 'fu', ch: 'Ligação', title: 'Check-in de 30 dias', company: 'Nexa Logística', contact: 'Luciana Prado', desc: 'Check-in do primeiro mês de uso.', tip: 'Prepare os números de uso: 94% de adesão da equipe.', ctx: [C('Cliente desde', '10/08/2026'), C('Uso', '94% da equipe'), C('Horário', '11:00')] },
+      { id: 'n4', off: 2, time: '15:00', type: 'ag', ch: 'Visita', title: 'Visita técnica de onboarding', company: 'Café Brasil Distribuidora', contact: 'Mônica Reis', desc: 'Visita técnica confirmada hoje por WhatsApp.', tip: 'Leve o checklist de configuração da etapa 3.', ctx: [C('Horário', '15:00 – 16:30'), C('Local', 'Porto Alegre'), C('Onboarding', 'Etapa 3')] },
+      { id: 'n5', off: 5, time: '09:00', type: 'fu', ch: 'E-mail', title: 'Enviar case de sucesso do setor', company: 'Clínica Santé', contact: 'Dr. Henrique Alves', desc: 'Enviar case de clínica que usa o Smark.', tip: 'O case da rede Vita Saúde é o mais parecido: duas unidades e agenda integrada.', ctx: [C('Oportunidade', 'R$ 27.000'), C('Etapa', 'Proposta'), C('Material', 'Case Vita Saúde')] },
+      { id: 'n6', off: 5, time: '14:00', type: 'ag', ch: 'Demonstração', title: 'Demonstração do Plano Starter', company: 'Farias & Cia Contabilidade', contact: 'Rodrigo Farias', desc: 'Demonstração para os sócios.', tip: 'Confirme os decisores antes: a tarefa de cadastro está atrasada.', ctx: [C('Horário', '14:00 – 15:00'), C('Formato', 'Online'), C('Oportunidade', 'R$ 9.600')] },
+      { id: 'n7', off: 5, time: '', type: 'ta', ch: 'Contrato', title: 'Preparar minuta do contrato', company: 'Grupo Vértice', contact: 'Marina Duarte', desc: 'Preparar minuta caso a proposta seja aprovada.', tip: 'Use o modelo com implantação em fases.', ctx: [C('Oportunidade', 'R$ 84.000'), C('Previsão', '30/09'), C('Modelo', 'Implantação em fases')] }
+    ];
+    this.variants = [
+      { subject: 'Próximos passos após a demonstração do Smark', body: 'Olá, Beatriz, tudo bem?\n\nObrigada pelo tempo na demonstração da última sexta (18/09). Anotei dois pontos da nossa conversa: a integração com o ERP que vocês usam hoje e o prazo de implantação para as três unidades.\n\nConversei com nosso time técnico: a integração é feita por API nativa, sem custo adicional no Plano Pro. O prazo estimado de implantação é de 30 dias, com treinamento incluso para a equipe comercial.\n\nFaz sentido reservarmos 30 minutos na quinta (24/09), às 10h, para eu mostrar a integração funcionando e alinharmos o escopo com o Tiago, do TI?\n\nUm abraço,\nAna Souza\nConsultora · Smark CRM' },
+      { subject: 'Beatriz, respostas sobre ERP e prazo de implantação', body: 'Oi, Beatriz!\n\nPassando para responder os dois pontos que ficaram em aberto na demonstração de sexta:\n\n• Integração com ERP: nativa, via API, já inclusa no Plano Pro.\n• Implantação: cerca de 30 dias para as três unidades, com treinamento.\n\nSe fizer sentido, reservo 30 min na quinta (24/09), às 10h, para mostrar a integração ao vivo para você e o Tiago. Funciona?\n\nAbraços,\nAna' },
+      { subject: 'Sobre a demonstração de sexta', body: 'Oi, Beatriz!\n\nConfirmei com o time técnico: a integração com o ERP já vem no Plano Pro e a implantação leva cerca de 30 dias.\n\nPodemos falar 30 min na quinta (24/09), às 10h, para eu mostrar funcionando?\n\nAbraços,\nAna' },
+      { subject: 'Kato Alimentos | Retorno sobre a demonstração do Smark CRM', body: 'Prezada Beatriz,\n\nAgradeço a disponibilidade para a demonstração realizada em 18/09. Conforme conversado, seguem os esclarecimentos sobre os pontos levantados:\n\n1. Integração com ERP: realizada por API nativa, sem custo adicional no Plano Pro.\n2. Prazo de implantação: aproximadamente 30 dias para as três unidades, incluindo o treinamento da equipe comercial.\n\nColoco-me à disposição para uma breve reunião na quinta-feira (24/09), às 10h, a fim de apresentar a integração e alinhar o escopo com a equipe de TI.\n\nAtenciosamente,\nAna Souza\nConsultora Comercial · Smark CRM' },
+      { subject: 'Como a Doce Vale integrou o ERP ao Smark em 3 semanas', body: 'Olá, Beatriz, tudo bem?\n\nObrigada pela demonstração de sexta (18/09). Sobre as suas duas dúvidas: a integração com o ERP é nativa no Plano Pro e a implantação leva cerca de 30 dias.\n\nPara dar uma referência do setor: a Doce Vale, distribuidora de alimentos com quatro unidades, conectou o ERP ao Smark em três semanas. Hoje os vendedores consultam estoque e status de pedido direto na oportunidade. Anexei o case completo.\n\nPodemos conversar 30 minutos na quinta (24/09), às 10h, com o Tiago, do TI?\n\nUm abraço,\nAna Souza\nConsultora · Smark CRM' }
+    ];
+  }
+  componentWillUnmount() { if (this.timer) clearTimeout(this.timer); }
+
+  dateOf(off) {
+    var d = new Date(2026, 8, 23 + off);
+    var wd = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'][d.getDay()];
+    var dd = ('0' + d.getDate()).slice(-2), mm = ('0' + (d.getMonth() + 1)).slice(-2);
+    return { wd: wd, dm: dd + '/' + mm };
+  }
+  rel(off) {
+    if (off === 0) return 'Hoje';
+    if (off === -1) return 'Ontem';
+    if (off === 1) return 'Amanhã';
+    return off < 0 ? 'Há ' + (-off) + ' dias' : 'Em ' + off + ' dias';
+  }
+  bucketOf(off) { return off <= -14 ? 'b1' : off < 0 ? 'b2' : off === 0 ? 'b3' : off <= 5 ? 'b4' : ''; }
+  inView(it, st) {
+    if (st.view === 'day') return it.off === st.offset;
+    return this.bucketOf(it.off) === st.range;
+  }
+  visible(st) {
+    var self = this;
+    return this.items.filter(function (it) { return self.inView(it, st) && (st.filter === 'todos' || it.type === st.filter); })
+      .sort(function (a, b) { return a.off - b.off || (a.time || '99').localeCompare(b.time || '99'); });
+  }
+  nextOpenId(st, fromId) {
+    var list = this.visible(st), idx = -1, i;
+    for (i = 0; i < list.length; i++) if (list[i].id === fromId) idx = i;
+    for (i = idx + 1; i < list.length; i++) if (!st.done[list[i].id]) return list[i].id;
+    for (i = 0; i < list.length; i++) if (!st.done[list[i].id] && list[i].id !== fromId) return list[i].id;
+    return fromId;
+  }
+  firstOpen(st) {
+    var list = this.visible(st);
+    for (var i = 0; i < list.length; i++) if (!st.done[list[i].id]) return list[i].id;
+    return list.length ? list[0].id : this.state.sel;
+  }
+  go(patch) {
+    var st = Object.assign({}, this.state, patch);
+    st.sel = this.firstOpen(st);
+    this.setState(st);
+  }
+  rewrite(v, tag) {
+    var self = this;
+    if (this.timer) clearTimeout(this.timer);
+    this.setState({ phase: 'generating' });
+    this.timer = setTimeout(function () { self.setState({ phase: 'ready', variant: v, revTag: tag, subject: null, body: null, instr: '' }); }, 1200);
+  }
+
+  renderVals() {
+    var self = this, st = this.state;
+    var TYPE = {
+      fu: { label: 'Follow-up', plural: ['follow-up', 'follow-ups'], bg: '#F1E4F6', fg: '#8A1CA3' },
+      ag: { label: 'Agendamento', plural: ['agendamento', 'agendamentos'], bg: '#DAEAF4', fg: '#005A87' },
+      ta: { label: 'Tarefa', plural: ['tarefa', 'tarefas'], bg: '#E9ECEF', fg: '#4A5561' }
+    };
+    var BK = {
+      b1: { label: 'Mais de 2 semanas', range: 'até 09/09', bar: '#A24037', fg: '#A24037', tint: '#F6E3E1' },
+      b2: { label: 'Menos de 2 semanas', range: '10/09 – 22/09', bar: '#E0806F', fg: '#A24037', tint: '#FBEFED' },
+      b3: { label: 'Hoje', range: 'qua, 23/09', bar: '#0073AD', fg: '#005A87', tint: '#EAF3F9' },
+      b4: { label: 'Próximos 5 dias', range: '24/09 – 28/09', bar: '#3F9A47', fg: '#256A29', tint: '#EDF6EE' }
+    };
+    function isOpen(it) { return !st.done[it.id]; }
+    function tagFor(it) {
+      if (st.done[it.id]) return { t: 'Feita', bg: '#E3F1E4', fg: '#256A29', mono: false };
+      if (it.off <= -14) return { t: 'Há ' + (-it.off) + ' dias', bg: '#A24037', fg: '#ffffff', mono: false };
+      if (it.off < 0) return { t: it.off === -1 ? 'Ontem' : 'Há ' + (-it.off) + ' dias', bg: '#F6E3E1', fg: '#A24037', mono: false };
+      return { t: it.time || 'Dia todo', bg: '#EEEEEE', fg: '#5F5F5F', mono: !!it.time };
+    }
+
+    // buckets
+    var total = 0, counts = {};
+    ['b1', 'b2', 'b3', 'b4'].forEach(function (k) {
+      var list = self.items.filter(function (it) { return self.bucketOf(it.off) === k && isOpen(it); });
+      counts[k] = list; total += list.length;
+    });
+    var activeBucket = st.view === 'range' ? st.range : self.bucketOf(st.offset);
+    var buckets = ['b1', 'b2', 'b3', 'b4'].map(function (k, i) {
+      var list = counts[k], b = BK[k], by = { fu: 0, ag: 0, ta: 0 };
+      list.forEach(function (it) { by[it.type]++; });
+      var parts = ['fu', 'ag', 'ta'].filter(function (t) { return by[t]; }).map(function (t) { return by[t] + ' ' + TYPE[t].plural[by[t] === 1 ? 0 : 1]; });
+      var on = activeBucket === k;
+      return {
+        label: b.label, range: b.range, bar: b.bar, fg: b.fg, count: list.length,
+        unit: k === 'b1' || k === 'b2' ? (list.length === 1 ? 'atrasada' : 'atrasadas') : (list.length === 1 ? 'atividade' : 'atividades'),
+        breakdown: parts.length ? parts.join(' · ') : 'Nada pendente',
+        pct: (total ? (list.length / total * 100) : 0) + '%',
+        bg: on ? b.tint : '#ffffff', ring: on ? b.bar : 'transparent', pressed: on ? 'true' : 'false',
+        divider: i === 0 ? '0' : '1px solid #EAEBEF',
+        pick: function () { if (k === 'b3') self.go({ view: 'day', offset: 0, range: '' }); else self.go({ view: 'range', range: k }); }
+      };
+    });
+
+    // nav labels
+    var navTitle, navSub, listTitle, listSub;
+    if (st.view === 'day') {
+      var d = this.dateOf(st.offset);
+      navTitle = this.rel(st.offset); navSub = d.wd + ', ' + d.dm;
+      listTitle = st.offset === 0 ? 'Para hoje' : st.offset < 0 ? 'Atrasadas de ' + d.dm : 'Previstas para ' + d.dm;
+    } else {
+      navTitle = BK[st.range].label; navSub = BK[st.range].range;
+      listTitle = st.range === 'b4' ? 'Próximos 5 dias' : 'Atrasadas · ' + BK[st.range].label.toLowerCase();
+    }
+
+    // filters
+    var inView = this.items.filter(function (it) { return self.inView(it, st); });
+    var filters = [['todos', 'Todos'], ['fu', 'Follow-ups'], ['ag', 'Agendamentos'], ['ta', 'Tarefas']].map(function (p) {
+      var n = inView.filter(function (it) { return isOpen(it) && (p[0] === 'todos' || it.type === p[0]); }).length;
+      var on = st.filter === p[0];
+      return { label: p[1], count: n, pressed: on ? 'true' : 'false', bg: on ? '#333333' : '#ffffff', fg: on ? '#ffffff' : '#333333', bd: on ? '#333333' : '#D4D4D4',
+        pick: function () { self.go({ filter: p[0] }); } };
+    });
+
+    // groups
+    var vis = this.visible(st), groups = [], byOff = {};
+    var openCount = vis.filter(isOpen).length;
+    listSub = openCount + (openCount === 1 ? ' pendente' : ' pendentes');
+    vis.forEach(function (it) {
+      if (!byOff[it.off]) { var dd = self.dateOf(it.off); byOff[it.off] = { label: self.rel(it.off), sub: dd.wd + ', ' + dd.dm, fg: it.off < 0 ? '#A24037' : it.off === 0 ? '#005A87' : '#5F5F5F', items: [] }; groups.push(byOff[it.off]); }
+      var done = !!st.done[it.id], on = st.sel === it.id, ty = TYPE[it.type], tg = tagFor(it);
+      byOff[it.off].items.push({
+        title: it.title, company: it.company, ch: it.ch, typeLabel: ty.label,
+        tileBg: done ? '#E3F1E4' : ty.bg, tileFg: done ? '#256A29' : ty.fg,
+        showDone: done, showFu: !done && it.type === 'fu', showAg: !done && it.type === 'ag', showTa: !done && it.type === 'ta',
+        titleFg: done ? '#66737D' : '#333333', deco: done ? 'line-through' : 'none',
+        tag: tg.t, tagBg: tg.bg, tagFg: tg.fg, tagFont: tg.mono ? "'Geist Mono', monospace" : 'inherit',
+        bg: on ? '#EAF3F9' : '#ffffff', bd: on ? '#0073AD' : '#EAEBEF', current: on ? 'true' : 'false',
+        pick: function () { self.setState({ sel: it.id }); }
+      });
+    });
+    if (st.view === 'day' && st.offset === 0 && st.filter === 'todos') listSub += ' · 2 concluídas';
+
+    // selected
+    var s = this.items.filter(function (it) { return it.id === st.sel; })[0] || this.items[0];
+    var sDone = !!st.done[s.id], sd = this.dateOf(s.off), status, sBg, sFg;
+    if (sDone) { status = 'Concluída'; sBg = '#E3F1E4'; sFg = '#256A29'; }
+    else if (s.off < 0) { status = 'Atrasada há ' + (-s.off) + (s.off === -1 ? ' dia' : ' dias'); sBg = s.off <= -14 ? '#A24037' : '#F6E3E1'; sFg = s.off <= -14 ? '#ffffff' : '#A24037'; }
+    else if (s.off === 0) { status = 'Hoje' + (s.time ? ' · ' + s.time : ''); sBg = '#DAEAF4'; sFg = '#005A87'; }
+    else { status = sd.wd + ', ' + sd.dm + (s.time ? ' · ' + s.time : ''); sBg = '#EDF6EE'; sFg = '#256A29'; }
+    var sel = {
+      title: s.title, company: s.company, contact: s.contact, ch: s.ch, typeLabel: TYPE[s.type].label,
+      tileBg: TYPE[s.type].bg, tileFg: TYPE[s.type].fg, status: status, statusBg: sBg, statusFg: sFg,
+      desc: s.desc, tip: s.tip, ctx: s.ctx, isDone: sDone, canComplete: !sDone && s.id !== 'f1'
+    };
+
+    // composer
+    var v = this.variants[st.variant];
+    var subject = st.subject != null ? st.subject : v.subject;
+    var body = st.body != null ? st.body : v.body;
+    var gen = st.phase === 'generating';
+    var CH = [['Mais curto', 2], ['Mais formal', 3], ['Incluir case de sucesso', 4], ['Mais direto', 1]];
+    var chips = CH.map(function (c) {
+      var on = st.variant === c[1] && st.revTag !== '';
+      return { label: c[0], bg: on ? '#F1E4F6' : '#ffffff', fg: on ? '#8A1CA3' : '#333333', bd: on ? '#C9A6D8' : '#D4D4D4',
+        pick: function () { self.rewrite(c[1], 'Revisado: ' + c[0].toLowerCase()); } };
+    });
+    var isKato = s.id === 'f1';
+
+    return {
+      accent: this.props.accent ?? '#0073AD',
+      lateTotal: counts.b1.length + counts.b2.length,
+      buckets: buckets, filters: filters, groups: groups, isEmpty: groups.length === 0,
+      navTitle: navTitle, navSub: navSub, listTitle: listTitle, listSub: listSub,
+      sel: sel, isKato: isKato, isGeneric: !isKato,
+      isSent: st.phase === 'sent', isComposing: st.phase !== 'sent', isGenerating: gen, isReady: !gen,
+      subject: subject, body: body, wordCount: body.split(/\s+/).filter(Boolean).length,
+      revTag: st.revTag, hasRevTag: st.revTag !== '' && st.phase !== 'sent',
+      chips: chips, instr: st.instr, followNext: st.followNext,
+      prevDay: function () { self.go({ view: 'day', offset: (st.view === 'day' ? st.offset : 0) - 1 }); },
+      nextDay: function () { self.go({ view: 'day', offset: (st.view === 'day' ? st.offset : 0) + 1 }); },
+      goToday: function () { self.go({ view: 'day', offset: 0, range: '' }); },
+      onInstr: function (e) { self.setState({ instr: e.target.value }); },
+      onSubject: function (e) { self.setState({ subject: e.target.value }); },
+      onBody: function (e) { self.setState({ body: e.target.value }); },
+      toggleFollow: function () { self.setState({ followNext: !self.state.followNext }); },
+      applyInstr: function () {
+        var t = (self.state.instr || '').trim(); if (!t) return;
+        var lo = t.toLowerCase();
+        var nv = lo.indexOf('case') >= 0 ? 4 : lo.indexOf('formal') >= 0 ? 3 : (lo.indexOf('curt') >= 0 || lo.indexOf('resum') >= 0) ? 2 : (self.state.variant === 1 ? 0 : 1);
+        self.rewrite(nv, 'Revisado: “' + (t.length > 28 ? t.slice(0, 28) + '…' : t) + '”');
+      },
+      regen: function () { self.rewrite(self.state.variant === 0 ? 1 : 0, ''); },
+      send: function () { var d = Object.assign({}, self.state.done); d.f1 = true; self.setState({ phase: 'sent', done: d }); },
+      undoSend: function () { var d = Object.assign({}, self.state.done); delete d.f1; self.setState({ phase: 'ready', done: d }); },
+      complete: function () { var d = Object.assign({}, self.state.done); d[self.state.sel] = true; var ns = Object.assign({}, self.state, { done: d }); self.setState({ done: d, sel: self.nextOpenId(ns, self.state.sel) }); },
+      reopen: function () { var d = Object.assign({}, self.state.done); delete d[self.state.sel]; if (self.state.sel === 'f1') self.setState({ done: d, phase: 'ready' }); else self.setState({ done: d }); },
+      goNext: function () { self.setState({ sel: self.nextOpenId(self.state, self.state.sel) }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
