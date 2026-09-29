@@ -2,7 +2,7 @@
 
 ### Issue tracker
 
-Issues são rastreadas no GitHub Issues via `gh` CLI (repositório ainda a ser criado). See `docs/agents/issue-tracker.md`.
+Issues são rastreadas no GitHub Issues via `gh` CLI em `fbeckenkamp/smark-fique-de-olho`. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 

@@ -44,6 +44,6 @@ Used by `/wayfinder`. The **map** is a single issue with **child** issues as tic
 - **Claim**: `gh issue edit <n> --add-assignee @me`, the session's first write.
 - **Resolve**: `gh issue comment <n> --body "<answer>"`, then `gh issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
 
-## Setup pendente
+## Repositório
 
-Esta pasta ainda não é um repositório git e a `gh` CLI não está instalada. Antes de usar skills que criam issues: rode `git init`, crie o repositório no GitHub, adicione o `git remote` e instale/autentique o `gh` (`brew install gh && gh auth login`).
+`fbeckenkamp/smark-fique-de-olho` (público): https://github.com/fbeckenkamp/smark-fique-de-olho
