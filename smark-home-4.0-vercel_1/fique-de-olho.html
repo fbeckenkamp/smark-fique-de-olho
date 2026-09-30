@@ -71,6 +71,7 @@ input,textarea{font-family:inherit}
 <div style="font-size: 13px; color: #66737D; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500;">Quarta-feira, 23 de setembro</div>
 <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 38px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1;">Fique de olho</h1>
 <p style="margin: 0; font-size: 15px; color: #5F5F5F;">Follow-ups, agendamentos e tarefas em sequência. Selecione uma atividade para executá-la.</p>
+<button type="button" onClick="{{openDrawer}}" aria-expanded="{{drawerOpen}}" style="align-self: flex-start; margin-top: 4px; height: 32px; padding: 0 12px 0 6px; border-radius: 99px; border: 1px solid #E4D3EC; background: #FCF9FD; color: #8A1CA3; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;"><span aria-hidden="true" style="width: 22px; height: 22px; border-radius: 99px; background: linear-gradient(135deg, #00C2D6 0%, #8A1CA3 100%); color: #ffffff; display: flex; align-items: center; justify-content: center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M12 8l1.4 2.6L16 12l-2.6 1.4L12 16l-1.4-2.6L8 12l2.6-1.4z"/></svg></span>Mark · {{approvalsLabel}}</button>
 </div>
 <div role="group" aria-label="Ordenar atividades" style="display: flex; flex-shrink: 0; white-space: nowrap; border: 1px solid #D4D4D4; border-radius: 12px; overflow: hidden; background: #ffffff;">
 <button type="button" onClick="{{modeDate}}" aria-pressed="{{modeDatePressed}}" style="height: 44px; padding: 0 14px; border: 0; font-size: 14px; font-weight: 600; background: {{modeDateBg}}; color: {{modeDateFg}};">Por data</button>
@@ -248,6 +249,12 @@ input,textarea{font-family:inherit}
 <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; line-height: 1.45; color: #5F5F5F;">
 <sc-for list="{{sel.why}}" as="w" hint-placeholder-count="3"><li>{{w}}</li></sc-for>
 </ul>
+</sc-if>
+<sc-if value="{{selPrep}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; align-items: center; gap: 10px; border-top: 1px solid #E4D3EC; padding-top: 10px;">
+<span style="font-size: 13px; color: #333333; flex-grow: 1;"><b style="color: #8A1CA3;">Mark preparou:</b> {{selPrep.what}}</span>
+<button type="button" onClick="{{selPrep.approve}}" style="height: 30px; padding: 0 12px; border-radius: 8px; background: #8A1CA3; border: 0; color: #ffffff; font-size: 13px; font-weight: 600; flex-shrink: 0;">Aprovar</button>
+</div>
 </sc-if>
 </div>
 </sc-if>
@@ -434,6 +441,73 @@ input,textarea{font-family:inherit}
 </div>
 
 </main>
+<sc-if value="{{drawerOpen}}" hint-placeholder-val="{{false}}">
+<aside role="dialog" aria-label="Central do Mark" style="position: fixed; top: 0; right: 0; bottom: 0; z-index: 25; width: 460px; background: #ffffff; border-left: 1px solid #DDDDDD; box-shadow: -12px 0 32px rgba(0,0,0,0.12); display: flex; flex-direction: column;">
+<div style="display: flex; align-items: center; gap: 10px; padding: 20px 20px 0;">
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 99px; background: linear-gradient(135deg, #00C2D6 0%, #8A1CA3 100%); color: #ffffff; display: flex; align-items: center; justify-content: center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M12 8l1.4 2.6L16 12l-2.6 1.4L12 16l-1.4-2.6L8 12l2.6-1.4z"/></svg></span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600; flex-grow: 1;">Central do Mark</h2>
+<button type="button" onClick="{{closeDrawer}}" aria-label="Fechar" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid #DDDDDD; background: #ffffff; color: #5F5F5F; font-size: 16px;">×</button>
+</div>
+<div role="tablist" style="display: flex; gap: 18px; padding: 12px 20px 0; border-bottom: 1px solid #EAEBEF;">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
+<button type="button" role="tab" aria-selected="{{t.on}}" onClick="{{t.pick}}" style="height: 38px; padding: 0; border: 0; border-bottom: 2px solid {{t.bd}}; background: transparent; color: {{t.fg}}; font-size: 14px; font-weight: 600;">{{t.label}}</button>
+</sc-for>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; padding: 16px 20px 24px; display: flex; flex-direction: column; gap: 10px;">
+
+<sc-if value="{{tabApprovals}}" hint-placeholder-val="{{true}}">
+<p style="margin: 0; font-size: 13px; color: #5F5F5F;">Ações que o Mark preparou nos canais em "Executar com aprovação". Nada é enviado sem o seu ok.</p>
+<sc-for list="{{approvals}}" as="a" hint-placeholder-count="3">
+<div style="border: 1px solid #E4D3EC; background: #FCF9FD; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 14px; font-weight: 600; color: #333333;">{{a.what}}</span>
+<span style="font-size: 12px; color: #66737D;">{{a.where}}</span>
+<sc-if value="{{a.hasWhy}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; font-weight: 600; color: #9A4F07;">{{a.why}}</span></sc-if>
+<div style="display: flex; gap: 6px; justify-content: flex-end;">
+<button type="button" onClick="{{a.reject}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 13px; font-weight: 600; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Rejeitar</button>
+<button type="button" onClick="{{a.edit}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 13px; font-weight: 600; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Abrir e editar</button>
+<button type="button" onClick="{{a.approve}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 13px; font-weight: 600; background: #8A1CA3; border: 0; color: #ffffff;">Aprovar</button>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{guard.digest}}" hint-placeholder-val="{{false}}"><p style="margin: 6px 0 0; font-size: 12px; color: #66737D;">O resumo diário das 9h lista estas pendências no seu e-mail.</p></sc-if>
+</sc-if>
+
+<sc-if value="{{tabLog}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; font-size: 13px; color: #5F5F5F;">Tudo o que o Mark executou hoje. Ações recentes podem ser desfeitas.</p>
+<sc-for list="{{markLog}}" as="e" hint-placeholder-count="3">
+<div style="display: flex; gap: 12px; align-items: flex-start; border-top: 1px solid #EAEBEF; padding-top: 10px;">
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #66737D; padding-top: 2px;">{{e.at}}</span>
+<div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1;"><span style="font-size: 14px; color: #333333;">{{e.text}}</span><span style="font-size: 12px; color: #66737D;">{{e.how}}</span></div>
+<sc-if value="{{e.canUndo}}" hint-placeholder-val="{{false}}"><button type="button" onClick="{{e.undo}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 13px; font-weight: 600; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; flex-shrink: 0;">Desfazer</button></sc-if>
+</div>
+</sc-for>
+</sc-if>
+
+<sc-if value="{{tabAutonomy}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; font-size: 13px; color: #5F5F5F;">Quanto o Mark pode fazer sozinho em cada canal.</p>
+<sc-for list="{{levels}}" as="l" hint-placeholder-count="4">
+<div role="radiogroup" aria-label="{{l.label}}" style="display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #EAEBEF; padding-top: 10px;">
+<span style="font-size: 14px; font-weight: 600; color: #333333;">{{l.label}}</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;">
+<sc-for list="{{l.opts}}" as="o" hint-placeholder-count="4">
+<button type="button" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}" style="height: 30px; padding: 0 10px; border-radius: 99px; border: 1px solid {{o.bd}}; background: {{o.bg}}; color: {{o.fg}}; font-size: 12px; font-weight: 600;">{{o.label}}</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+<div style="border-top: 1px solid #EAEBEF; padding-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 14px; font-weight: 600; color: #333333;">Proteções</span>
+<sc-for list="{{guards}}" as="g" hint-placeholder-count="3">
+<label style="display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: #333333;"><input type="checkbox" checked="{{g.on}}" onChange="{{g.toggle}}"> {{g.label}}</label>
+</sc-for>
+<span style="font-size: 12px; color: #66737D;">Limite: {{autoUsed}}.</span>
+<span style="font-size: 12px; color: #66737D;">LGPD: envios automáticos só para contatos com base legal registrada (consentimento ou legítimo interesse) e respeitando pedidos de opt-out.</span>
+</div>
+</sc-if>
+
+</div>
+</aside>
+</sc-if>
 <sc-if value="{{paletteOpen}}" hint-placeholder-val="{{false}}">
 <div onClick="{{closeOverlays}}" style="position: fixed; inset: 0; z-index: 30; background: rgba(30,30,30,0.35); display: flex; justify-content: center; align-items: flex-start; padding-top: 120px;">
 <div role="dialog" aria-label="Buscar atividade" onClick="{{stop}}" style="width: 560px; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 48px rgba(0,0,0,0.25); overflow: hidden;">
@@ -475,7 +549,11 @@ input,textarea{font-family:inherit}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false, menu: '', discarded: {}, skips: {}, toast: null, pickDate: '2026-09-24', pickTime: '09:00', paletteOpen: false, query: '', palIdx: 0, helpOpen: false, autoOpen: true, afterDone: 'next', prefsOpen: false, actionOpen: false, drafts: {}, called: {}, focusRow: '' };
+    this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false, menu: '', discarded: {}, skips: {}, toast: null, pickDate: '2026-09-24', pickTime: '09:00', paletteOpen: false, query: '', palIdx: 0, helpOpen: false, autoOpen: true, afterDone: 'next', prefsOpen: false, actionOpen: false, drafts: {}, called: {}, focusRow: '',
+      drawer: '', rejected: {}, autonomy: { email: 'rascunhar', wa: 'rascunhar', agenda: 'aprovar', crm: 'aprovar' },
+      guard: { hours: true, bigDeal: true, digest: true, limit: 20 }, autoCount: 0,
+      log: [{ at: '09:20', text: 'Registrou a confirmação da visita técnica por WhatsApp (Café Brasil)', auto: true }, { at: '08:42', text: 'Registrou a ligação com Luciana Prado no histórico (Nexa Logística)', auto: true }] };
+    try { var au = JSON.parse(localStorage.getItem('fdo.autonomy') || 'null'); if (au && au.autonomy) { this.state.autonomy = Object.assign(this.state.autonomy, au.autonomy); this.state.guard = Object.assign(this.state.guard, au.guard || {}); } } catch (e) {}
     try { var pf = JSON.parse(localStorage.getItem('fdo.prefs') || '{}'); if (typeof pf.autoOpen === 'boolean') this.state.autoOpen = pf.autoOpen; if (/^(next|stay|list)$/.test(pf.afterDone)) this.state.afterDone = pf.afterDone; } catch (e) {}
     this.onKey = this.onKey.bind(this);
     this.isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
@@ -570,6 +648,17 @@ class Component extends DCLogic {
       it.deal = { value: d[0], stage: d[1], prob: PROB[d[1]], boost: d[2] || 1, boostWhy: d[3] || '' };
       it.ev = d[0] * PROB[d[1]] * (d[2] || 1);
     });
+    // Ações que o Mark já deixou prontas: [canal, o que ele vai fazer, registro depois de feito]
+    this.prep = {
+      l1: ['crm', 'Atualizar os decisores: Helena Farias (sócia) e Marcos Tavares (financeiro)', 'Atualizou os decisores da Farias & Cia'],
+      l5: ['agenda', 'Enviar convite para Mônica Reis: sex, 25/09 às 15h', 'Enviou o convite de sex, 25/09 às 15h (Café Brasil)'],
+      l8: ['crm', 'Atualizar o valor da oportunidade: R$ 21.600 → R$ 27.000', 'Atualizou o valor da Clínica Santé para R$ 27.000'],
+      l3: ['email', 'Enviar a pesquisa de 30 dias para Luciana Prado', 'Enviou a pesquisa de 30 dias para Luciana Prado (Nexa)'],
+      l7: ['email', 'Enviar o contrato v2 para Luciana Prado, explicando a cláusula 7', 'Enviou o contrato v2 para Luciana Prado (Nexa)'],
+      t4: ['email', 'Responder Paulo Teixeira: 8% à vista (R$ 77.280)', 'Respondeu Paulo Teixeira sobre o desconto à vista (Vértice)'],
+      t5: ['wa', 'Enviar o guia e a trilha de vídeos para Mônica Reis', 'Enviou o material de onboarding para Mônica Reis (Café Brasil)'],
+      t9: ['wa', 'Perguntar a Carlos Mendes se ele viu a proposta', 'Enviou WhatsApp para Carlos Mendes (Rota Sul)']
+    };
     // Horário livre sugerido pelo Mark para reagendar (agenda do vendedor e do cliente)
     this.items.forEach(function (it) { if (it.id === 'l5') it.slot = { off: 2, time: '15:00' }; });
     this.variants = [
@@ -621,6 +710,55 @@ class Component extends DCLogic {
     var st = this.state, id = st.sel, snap = this.snapshot(id), d = Object.assign({}, st.done); d[id] = true;
     var ns = Object.assign({}, st, { done: d });
     this.setState(Object.assign({ done: d, whyOpen: false, menu: '', actionOpen: false, toast: this.showToast(text, snap) }, this.afterComplete(ns, id)));
+  }
+  saveAutonomy(patch) {
+    var st = Object.assign({}, this.state, patch);
+    try { localStorage.setItem('fdo.autonomy', JSON.stringify({ autonomy: st.autonomy, guard: st.guard })); } catch (e) {}
+  }
+  // Ações preparadas ainda pendentes (hoje ou atrasadas) de um canal
+  pendingPrep(st, cat) {
+    var self = this;
+    return this.items.filter(function (it) { var p = self.prep[it.id]; return p && (!cat || p[0] === cat) && it.off <= 0 && !st.done[it.id] && !st.rejected[it.id]; });
+  }
+  // Proteção: oportunidades acima de R$ 50 mil sempre passam por aprovação
+  needsApproval(st, it) {
+    var lvl = st.autonomy[this.prep[it.id][0]];
+    return lvl === 'aprovar' || (lvl === 'sozinho' && st.guard.bigDeal && it.deal && it.deal.value > 50000);
+  }
+  execPrep(st, id, auto) {
+    var it = this.items.filter(function (x) { return x.id === id; })[0], done = Object.assign({}, st.done);
+    done[id] = true;
+    if (id === 'l8') { it._prevCtx = it.ctx[0].v; it.ctx[0] = { k: 'Oportunidade', v: 'Plano Pro · R$ 27.000' }; }
+    var now = 10 * 60 + st.log.length;
+    var at = ('0' + Math.floor(now / 60)).slice(-2) + ':' + ('0' + (now % 60)).slice(-2);
+    return { done: done, log: [{ at: at, text: this.prep[id][2], auto: !!auto, id: id }].concat(st.log), autoCount: st.autoCount + (auto ? 1 : 0) };
+  }
+  // Ao mudar um canal para "Executar sozinho", o Mark executa o que já estava pronto, respeitando as proteções
+  setLevel(cat, lvl) {
+    var st = Object.assign({}, this.state), self = this;
+    st.autonomy = Object.assign({}, st.autonomy); st.autonomy[cat] = lvl;
+    if (lvl === 'sozinho') {
+      this.pendingPrep(st, cat).forEach(function (it) {
+        if (self.needsApproval(st, it) || st.autoCount >= st.guard.limit) return;
+        // Horário comercial: o relógio do mock (10:00) está dentro de 8h–18h
+        Object.assign(st, self.execPrep(st, it.id, true));
+      });
+    }
+    this.saveAutonomy(st);
+    var patch = { autonomy: st.autonomy, done: st.done, log: st.log, autoCount: st.autoCount };
+    if (st.done[this.state.sel] && !this.state.done[this.state.sel]) patch.sel = this.nextOpenId(Object.assign({}, this.state, { done: st.done }), this.state.sel);
+    this.setState(patch);
+  }
+  approve(id) {
+    var st = this.state, patch = this.execPrep(st, id, false);
+    if (st.sel === id) patch.sel = this.nextOpenId(Object.assign({}, st, { done: patch.done }), id);
+    this.setState(patch);
+  }
+  undoLog(i) {
+    var st = this.state, e = st.log[i], done = Object.assign({}, st.done), it = this.items.filter(function (x) { return x.id === e.id; })[0];
+    delete done[e.id];
+    if (it && it._prevCtx) { it.ctx[0] = { k: 'Oportunidade', v: it._prevCtx }; it._prevCtx = null; }
+    this.setState({ done: done, log: st.log.filter(function (_, j) { return j !== i; }), autoCount: Math.max(0, st.autoCount - (e.auto ? 1 : 0)) });
   }
   undo() {
     var t = this.state.toast; if (!t) return;
@@ -678,7 +816,7 @@ class Component extends DCLogic {
     var typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
     if (mod && (k === 'k' || k === 'K')) { e.preventDefault(); this.setState({ paletteOpen: !st.paletteOpen, query: '', palIdx: 0, helpOpen: false, menu: '' }); return; }
     if (k === 'Escape') {
-      if (st.paletteOpen || st.helpOpen || st.menu || st.prefsOpen) { e.preventDefault(); this.setState({ paletteOpen: false, helpOpen: false, menu: '', prefsOpen: false }); }
+      if (st.paletteOpen || st.helpOpen || st.menu || st.prefsOpen || st.drawer) { e.preventDefault(); this.setState({ paletteOpen: false, helpOpen: false, menu: '', prefsOpen: false, drawer: '' }); }
       return;
     }
     if (st.paletteOpen) {
@@ -1005,6 +1143,41 @@ class Component extends DCLogic {
       modeFocusBg: st.view === 'focus' ? '#333333' : '#ffffff', modeFocusFg: st.view === 'focus' ? '#ffffff' : '#333333', modeFocusPressed: st.view === 'focus' ? 'true' : 'false',
       modeDate: function () { if (self.state.view === 'focus') self.go({ view: 'day', offset: 0, range: '' }); },
       modeFocus: function () { self.go({ view: 'focus', range: '' }); },
+      approvals: (function () {
+        return self.pendingPrep(st).filter(function (it) { return self.needsApproval(st, it); }).map(function (it) {
+          var big = st.autonomy[self.prep[it.id][0]] === 'sozinho';
+          return { id: it.id, what: self.prep[it.id][1], where: it.company + ' · ' + it.title, why: big ? 'Acima de R$ 50 mil: sempre pede aprovação' : '',
+            hasWhy: big, approve: function () { self.approve(it.id); },
+            reject: function () { var r = Object.assign({}, self.state.rejected); r[it.id] = true; self.setState({ rejected: r }); },
+            edit: function () { self.jumpTo(it.id); self.setState({ drawer: '' }); } };
+        });
+      })(),
+      markLog: st.log.map(function (e, i) { return { at: e.at, text: e.text, how: e.auto ? 'automático' : 'aprovado por você', canUndo: !!e.id, undo: function () { self.undoLog(i); } }; }),
+      levels: [['email', 'E-mail'], ['wa', 'WhatsApp'], ['agenda', 'Agenda (convites e reagendamentos)'], ['crm', 'CRM (atualização de campos)']].map(function (c) {
+        return { label: c[1], opts: [['sugerir', 'Sugerir'], ['rascunhar', 'Rascunhar'], ['aprovar', 'Executar com aprovação'], ['sozinho', 'Executar sozinho']].map(function (o) {
+          var on = st.autonomy[c[0]] === o[0];
+          return { label: o[1], on: on ? 'true' : 'false', bg: on ? '#8A1CA3' : '#ffffff', fg: on ? '#ffffff' : '#333333', bd: on ? '#8A1CA3' : '#D4D4D4', pick: function () { self.setLevel(c[0], o[0]); } };
+        }) };
+      }),
+      guards: [['hours', 'Executar sozinho só em horário comercial (8h–18h)'], ['bigDeal', 'Oportunidades acima de R$ 50 mil sempre pedem aprovação'], ['digest', 'Resumo diário por e-mail às 9h com as aprovações pendentes']].map(function (g) {
+        return { label: g[1], on: !!st.guard[g[0]], toggle: function () { var gg = Object.assign({}, self.state.guard); gg[g[0]] = !gg[g[0]]; self.saveAutonomy({ guard: gg }); self.setState({ guard: gg }); } };
+      }),
+      autoUsed: st.autoCount + ' de ' + st.guard.limit + ' ações automáticas hoje',
+      drawerOpen: !!st.drawer,
+      approvalsCount: (function () { var n = self.pendingPrep(st).filter(function (it) { return self.needsApproval(st, it); }).length; return n; })(),
+      approvalsLabel: (function () { var n = self.pendingPrep(st).filter(function (it) { return self.needsApproval(st, it); }).length; return n ? n + (n === 1 ? ' aguardando aprovação' : ' aguardando aprovação') : 'nada pendente'; })(),
+      tabs: [['approvals', 'Aprovações'], ['log', 'O que o Mark fez'], ['autonomy', 'Autonomia']].map(function (t) {
+        var on = st.drawer === t[0];
+        return { label: t[1], on: on ? 'true' : 'false', fg: on ? '#8A1CA3' : '#5F5F5F', bd: on ? '#8A1CA3' : 'transparent', pick: function () { self.setState({ drawer: t[0] }); } };
+      }),
+      tabApprovals: st.drawer === 'approvals', tabLog: st.drawer === 'log', tabAutonomy: st.drawer === 'autonomy',
+      openDrawer: function () { self.setState({ drawer: 'approvals', menu: '', prefsOpen: false }); },
+      closeDrawer: function () { self.setState({ drawer: '' }); },
+      selPrep: (function () {
+        var p = self.prep[s.id];
+        if (!p || sDone || s.off > 0 || st.rejected[s.id] || !self.needsApproval(st, s)) return null;
+        return { what: p[1], approve: function () { self.approve(s.id); } };
+      })(),
       whyOpen: st.whyOpen, whyLabel: st.whyOpen ? 'Ocultar' : 'Por quê?', whyExpanded: st.whyOpen ? 'true' : 'false',
       toggleWhy: function () { self.setState({ whyOpen: !self.state.whyOpen }); }
     };
