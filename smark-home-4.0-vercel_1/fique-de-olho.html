@@ -111,6 +111,7 @@ input,textarea{font-family:inherit}
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 0 4px;">
 <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600;">{{listTitle}}</h2>
 <span style="font-size: 13px; color: #66737D;">{{listSub}}</span>
+<button type="button" onClick="{{openHelp}}" title="Atalhos de teclado" style="margin-left: auto; align-self: center; height: 28px; padding: 0 8px; border-radius: 8px; border: 1px solid #DDDDDD; background: #ffffff; color: #5F5F5F; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 6px;">Atalhos <kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid #D4D4D4; background: #F5F5F5; color: #5F5F5F;">?</kbd></button>
 </div>
 <div role="group" aria-label="Filtrar por tipo" style="display: flex; gap: 6px; flex-wrap: wrap; padding: 0 4px;">
 <sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
@@ -171,7 +172,7 @@ input,textarea{font-family:inherit}
 <div style="display: flex; gap: 8px; flex-shrink: 0; position: relative;">
 <sc-if value="{{canSnooze}}" hint-placeholder-val="{{true}}">
 <button type="button" onClick="{{toggleSnooze}}" aria-expanded="{{snoozeOpen}}" aria-haspopup="menu" style="height: 40px; padding: 0 14px; border-radius: 10px; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Reagendar</button>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Reagendar <kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid #D4D4D4; background: #F5F5F5; color: #5F5F5F;">S</kbd></button>
 </sc-if>
 <sc-if value="{{snoozeOpen}}" hint-placeholder-val="{{false}}">
 <div role="menu" aria-label="Adiar atividade" style="position: absolute; top: 48px; right: 0; z-index: 5; width: 300px; background: #ffffff; border: 1px solid #DDDDDD; border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,0.12); padding: 8px; display: flex; flex-direction: column; gap: 2px;">
@@ -197,7 +198,7 @@ input,textarea{font-family:inherit}
 </sc-if>
 <sc-if value="{{sel.canComplete}}" hint-placeholder-val="{{true}}">
 <button type="button" onClick="{{complete}}" style="height: 40px; padding: 0 14px; border-radius: 10px; background: #EEEEEE; border: 1px solid #D4D4D4; color: #333333; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Concluir</button>
+<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Concluir <kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid #D4D4D4; background: #F5F5F5; color: #5F5F5F;">E</kbd></button>
 </sc-if>
 <sc-if value="{{sel.isDone}}" hint-placeholder-val="{{false}}">
 <button type="button" onClick="{{reopen}}" style="height: 40px; padding: 0 14px; border-radius: 10px; background: #E3F1E4; border: 1px solid #BFDCC1; color: #256A29; font-size: 13px; font-weight: 600;">Concluída · reabrir</button>
@@ -332,7 +333,7 @@ input,textarea{font-family:inherit}
 <input type="checkbox" checked="{{followNext}}" onChange="{{toggleFollow}}" style="width: 18px; height: 18px; margin: 0; accent-color: #0073AD;">Criar próximo follow-up em 3 dias úteis se não houver resposta</label>
 <button type="button" style="margin-left: auto; height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; font-size: 14px; font-weight: 600;">Salvar rascunho</button>
 <button type="button" onClick="{{send}}" disabled="{{isGenerating}}" style="height: 44px; padding: 0 20px; border-radius: 12px; background: {{accent}}; color: #ffffff; border: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/></svg>Enviar e-mail</button>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/></svg>Enviar e-mail <kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.45); color: #ffffff;">{{modKey}} ↵</kbd></button>
 </div>
 
 </div>
@@ -369,7 +370,7 @@ input,textarea{font-family:inherit}
 </sc-if>
 <div style="display: flex; gap: 10px; justify-content: flex-end;">
 <button type="button" onClick="{{toggleSkip}}" aria-expanded="{{skipOpen}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; font-size: 14px; font-weight: 600;">Pular</button>
-<button type="button" onClick="{{complete}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: {{accent}}; color: #ffffff; border: 0; font-size: 14px; font-weight: 600;">Concluir e ir para a próxima</button>
+<button type="button" onClick="{{complete}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: {{accent}}; color: #ffffff; border: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">Concluir e ir para a próxima <kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.45); color: #ffffff;">E</kbd></button>
 </div>
 </div>
 </sc-if>
@@ -378,6 +379,35 @@ input,textarea{font-family:inherit}
 </div>
 
 </main>
+<sc-if value="{{paletteOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{closeOverlays}}" style="position: fixed; inset: 0; z-index: 30; background: rgba(30,30,30,0.35); display: flex; justify-content: center; align-items: flex-start; padding-top: 120px;">
+<div role="dialog" aria-label="Buscar atividade" onClick="{{stop}}" style="width: 560px; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 48px rgba(0,0,0,0.25); overflow: hidden;">
+<input data-palette="1" type="text" value="{{query}}" onChange="{{onQuery}}" placeholder="Buscar por empresa, contato ou atividade…" aria-label="Buscar atividade" style="width: 100%; box-sizing: border-box; height: 56px; border: 0; border-bottom: 1px solid #EAEBEF; padding: 0 20px; font-size: 16px; outline: none;">
+<div role="listbox" style="max-height: 420px; overflow-y: auto; padding: 6px;">
+<sc-for list="{{palResults}}" as="r" hint-placeholder-count="3">
+<button type="button" role="option" aria-selected="{{r.current}}" onClick="{{r.pick}}" style="width: 100%; text-align: left; border: 0; border-radius: 10px; background: {{r.bg}}; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px;">
+<span style="font-size: 14px; font-weight: 600; color: #333333;">{{r.title}}</span>
+<span style="font-size: 12px; color: #66737D;">{{r.sub}}</span>
+</button>
+</sc-for>
+<sc-if value="{{palEmpty}}" hint-placeholder-val="{{false}}"><div style="padding: 20px; text-align: center; font-size: 14px; color: #66737D;">Nenhuma atividade pendente encontrada.</div></sc-if>
+</div>
+<div style="border-top: 1px solid #EAEBEF; padding: 8px 16px; display: flex; gap: 16px; font-size: 12px; color: #66737D;"><span>↑ ↓ navegar</span><span>Enter abrir</span><span>Esc fechar</span></div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{helpOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{closeOverlays}}" style="position: fixed; inset: 0; z-index: 30; background: rgba(30,30,30,0.35); display: flex; justify-content: center; align-items: flex-start; padding-top: 120px;">
+<div role="dialog" aria-label="Atalhos de teclado" onClick="{{stop}}" style="width: 440px; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 48px rgba(0,0,0,0.25); padding: 20px 24px;">
+<div style="display: flex; align-items: center; margin-bottom: 12px;"><h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600;">Atalhos de teclado</h2>
+<button type="button" onClick="{{closeOverlays}}" aria-label="Fechar" style="margin-left: auto; width: 32px; height: 32px; border-radius: 8px; border: 1px solid #DDDDDD; background: #ffffff; color: #5F5F5F; font-size: 16px;">×</button></div>
+<sc-for list="{{shortcuts}}" as="x" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-top: 1px solid #EAEBEF; font-size: 14px; color: #333333;"><span>{{x.d}}</span><kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid #D4D4D4; background: #F5F5F5; color: #5F5F5F;">{{x.k}}</kbd></div>
+</sc-for>
+<p style="margin: 12px 0 0; font-size: 12px; color: #66737D;">Os atalhos de uma letra não funcionam enquanto você digita num campo.</p>
+</div>
+</div>
+</sc-if>
 <sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}">
 <div role="status" style="position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 20; background: #333333; color: #ffffff; border-radius: 12px; padding: 10px 10px 10px 16px; display: flex; align-items: center; gap: 14px; font-size: 14px; box-shadow: 0 12px 32px rgba(0,0,0,0.2);">
 <span>{{toastText}}</span>
@@ -390,7 +420,9 @@ input,textarea{font-family:inherit}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false, menu: '', discarded: {}, skips: {}, toast: null, pickDate: '2026-09-24', pickTime: '09:00' };
+    this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false, menu: '', discarded: {}, skips: {}, toast: null, pickDate: '2026-09-24', pickTime: '09:00', paletteOpen: false, query: '', palIdx: 0, helpOpen: false };
+    this.onKey = this.onKey.bind(this);
+    this.isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
     this.toastTimer = null;
     this.timer = null;
     function C(k, v) { return { k: k, v: v }; }
@@ -512,7 +544,61 @@ class Component extends DCLogic {
     if (this.toastTimer) clearTimeout(this.toastTimer);
     this.setState({ done: done, discarded: dis, skips: sk, sel: sn.id, toast: null, menu: '' });
   }
-  componentWillUnmount() { if (this.timer) clearTimeout(this.timer); if (this.toastTimer) clearTimeout(this.toastTimer); }
+  componentDidMount() { document.addEventListener('keydown', this.onKey); }
+  componentWillUnmount() { document.removeEventListener('keydown', this.onKey); if (this.timer) clearTimeout(this.timer); if (this.toastTimer) clearTimeout(this.toastTimer); }
+  componentDidUpdate(pp, ps) {
+    // Só elementos visíveis: o template oculto em <x-dc> repete o markup
+    function shown(sel) { return Array.prototype.filter.call(document.querySelectorAll(sel), function (el) { return el.offsetParent; })[0]; }
+    if (this.state.paletteOpen && !ps.paletteOpen) { var inp = shown('input[data-palette]'); if (inp) inp.focus(); }
+    if (this.state.sel !== ps.sel) { var cur = shown('section[aria-label="Atividades"] button[aria-current="true"]'); if (cur) cur.scrollIntoView({ block: 'nearest' }); }
+  }
+  paletteResults(st) {
+    var q = (st.query || '').trim().toLowerCase(), self = this;
+    return this.items.filter(function (it) {
+      if (st.done[it.id]) return false;
+      return !q || (it.title + ' ' + it.company + ' ' + it.contact).toLowerCase().indexOf(q) >= 0;
+    }).sort(function (a, b) { return a.off - b.off || (a.time || '99').localeCompare(b.time || '99'); }).slice(0, 8);
+  }
+  jumpTo(id) {
+    var it = this.items.filter(function (x) { return x.id === id; })[0];
+    this.setState({ view: 'day', offset: it.off, range: '', filter: 'todos', sel: id, paletteOpen: false, query: '', palIdx: 0, menu: '', whyOpen: false });
+  }
+  step(dir) {
+    var list = this.visible(this.state), idx = -1;
+    for (var i = 0; i < list.length; i++) if (list[i].id === this.state.sel) idx = i;
+    var n = list[Math.max(0, Math.min(list.length - 1, idx + dir))];
+    if (n) this.setState({ sel: n.id, whyOpen: false, menu: '' });
+  }
+  onKey(e) {
+    var st = this.state, t = e.target, mod = e.metaKey || e.ctrlKey, k = e.key;
+    var typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
+    if (mod && (k === 'k' || k === 'K')) { e.preventDefault(); this.setState({ paletteOpen: !st.paletteOpen, query: '', palIdx: 0, helpOpen: false, menu: '' }); return; }
+    if (k === 'Escape') {
+      if (st.paletteOpen || st.helpOpen || st.menu) { e.preventDefault(); this.setState({ paletteOpen: false, helpOpen: false, menu: '' }); }
+      return;
+    }
+    if (st.paletteOpen) {
+      var res = this.paletteResults(st);
+      if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); this.setState({ palIdx: Math.max(0, Math.min(res.length - 1, st.palIdx + (k === 'ArrowDown' ? 1 : -1))) }); }
+      else if (k === 'Enter' && res[st.palIdx]) { e.preventDefault(); this.jumpTo(res[st.palIdx].id); }
+      return;
+    }
+    var v = this.renderVals();
+    if (mod && k === 'Enter') {
+      if (v.isKato && v.isComposing && v.isReady) { e.preventDefault(); v.send(); }
+      return;
+    }
+    if (typing || mod || e.altKey) return;
+    if (k === '?') { e.preventDefault(); this.setState({ helpOpen: !st.helpOpen }); return; }
+    if (st.helpOpen) return;
+    if (k === 'j' || k === 'J' || k === 'ArrowDown') { e.preventDefault(); this.step(1); }
+    else if (k === 'k' || k === 'K' || k === 'ArrowUp') { e.preventDefault(); this.step(-1); }
+    else if (k === 'e' || k === 'E') {
+      if (v.sel.canComplete) { e.preventDefault(); v.complete(); }
+      else if (v.sel.isDone) { e.preventDefault(); v.goNext(); }
+    }
+    else if (k === 's' || k === 'S') { if (v.canSnooze) { e.preventDefault(); v.toggleSnooze(); } }
+  }
 
   dateOf(off) {
     var d = new Date(2026, 8, 23 + off);
@@ -736,6 +822,21 @@ class Component extends DCLogic {
       closeMenu: function () { self.setState({ menu: '' }); },
       hasToast: !!st.toast, toastText: st.toast ? st.toast.text : '',
       undoToast: function () { self.undo(); },
+      modKey: this.isMac ? '⌘' : 'Ctrl',
+      paletteOpen: st.paletteOpen, query: st.query, helpOpen: st.helpOpen,
+      palResults: this.paletteResults(st).map(function (it, i) {
+        var dd = self.dateOf(it.off), on = i === st.palIdx;
+        return { title: it.title, sub: it.company + ' · ' + it.contact + ' · ' + self.rel(it.off) + (it.time ? ' ' + it.time : ''),
+          bg: on ? '#EAF3F9' : '#ffffff', current: on ? 'true' : 'false', pick: function () { self.jumpTo(it.id); } };
+      }),
+      palEmpty: this.paletteResults(st).length === 0,
+      onQuery: function (e) { self.setState({ query: e.target.value, palIdx: 0 }); },
+      closeOverlays: function () { self.setState({ paletteOpen: false, helpOpen: false }); },
+      openHelp: function () { self.setState({ helpOpen: true }); },
+      stop: function (e) { e.stopPropagation(); },
+      shortcuts: [['J / ↓', 'Próxima atividade da lista'], ['K / ↑', 'Atividade anterior'], ['E', 'Concluir e ir para a próxima'], ['S', 'Abrir o menu de adiar'],
+        [(this.isMac ? '⌘' : 'Ctrl') + ' + Enter', 'Enviar o rascunho do Mark'], [(this.isMac ? '⌘' : 'Ctrl') + ' + K', 'Buscar atividade por empresa ou contato'], ['?', 'Mostrar esta lista'], ['Esc', 'Fechar menus e janelas']]
+        .map(function (x) { return { k: x[0], d: x[1] }; }),
       whyOpen: st.whyOpen, whyLabel: st.whyOpen ? 'Ocultar' : 'Por quê?', whyExpanded: st.whyOpen ? 'true' : 'false',
       toggleWhy: function () { self.setState({ whyOpen: !self.state.whyOpen }); }
     };
