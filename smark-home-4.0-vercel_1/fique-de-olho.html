@@ -279,11 +279,39 @@ input,textarea{font-family:inherit}
 </div>
 </sc-if>
 <sc-if value="{{act.isWa}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
 <span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">WhatsApp · {{act.contact}} · {{act.phone}}</span>
+<sc-if value="{{act.signal}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: {{act.signal.bg}}; color: {{act.signal.fg}};">{{act.signal.t}}</span></sc-if>
+</div>
+<sc-if value="{{act.hasConv}}" hint-placeholder-val="{{false}}">
+<div aria-label="Conversa sincronizada" style="display: flex; flex-direction: column; gap: 6px; background: #FAFAF7; border: 1px solid #EAEBEF; border-radius: 12px; padding: 10px 12px; max-height: 190px; overflow-y: auto;">
+<span style="font-size: 11px; color: #66737D; text-align: center;">Conversa sincronizada · WhatsApp Business</span>
+<sc-for list="{{act.conv}}" as="m" hint-placeholder-count="3">
+<div style="align-self: {{m.align}}; max-width: 82%; background: {{m.bg}}; border-radius: 10px; padding: 6px 10px; display: flex; flex-direction: column; gap: 2px;">
+<span style="font-size: 13px; line-height: 1.4; color: #333333;">{{m.text}}</span>
+<span style="font-size: 11px; color: #66737D; text-align: right;">{{m.who}} · {{m.at}}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+<span style="font-size: 13px; color: #8A1CA3; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M12 8l1.4 2.6L16 12l-2.6 1.4L12 16l-1.4-2.6L8 12l2.6-1.4z"/></svg> Mark escreveu</span>
+<sc-for list="{{act.waChips}}" as="c" hint-placeholder-count="3">
+<button type="button" onClick="{{c.pick}}" disabled="{{act.waGen}}" style="height: 30px; padding: 0 10px; border-radius: 99px; border: 1px solid {{c.bd}}; background: {{c.bg}}; color: {{c.fg}}; font-size: 12px; font-weight: 500;">{{c.label}}</button>
+</sc-for>
+<button type="button" onClick="{{waRegen}}" disabled="{{act.waGen}}" style="height: 30px; padding: 0 10px; border-radius: 99px; border: 1px solid #D4D4D4; background: #ffffff; color: #333333; font-size: 12px; font-weight: 500;">Regerar</button>
+</div>
+<sc-if value="{{act.outside24h}}" hint-placeholder-val="{{false}}">
+<div style="font-size: 12px; line-height: 1.45; color: #7A5A00; background: #FFF6DA; border: 1px solid #F1DFA3; border-radius: 10px; padding: 8px 10px;">Fora da janela de 24 h: o cliente não escreve há mais de um dia, então o WhatsApp Business só aceita um template aprovado. A mensagem vai como o template <b>retomada_proposta</b>, com o seu texto como variável.</div>
+</sc-if>
+<sc-if value="{{act.waGen}}" hint-placeholder-val="{{false}}"><div class="sk" style="height: 96px; border-radius: 12px; background: #F1E4F6; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8A1CA3;">Mark está reescrevendo a mensagem…</div></sc-if>
+<sc-if value="{{act.waReady}}" hint-placeholder-val="{{true}}">
 <textarea aria-label="Mensagem de WhatsApp" value="{{act.wa}}" onChange="{{onDraft}}" style="width: 100%; height: 96px; box-sizing: border-box; border: 1px solid #DDDDDD; border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; resize: vertical;"></textarea>
+</sc-if>
 <div style="display: flex; gap: 8px; justify-content: flex-end;">
 <button type="button" onClick="{{copyWa}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Copiar</button>
-<a href="{{act.waHref}}" target="_blank" rel="noopener" onClick="{{sentWa}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; background: #25A244; color: #ffffff; border: 0;">Abrir no WhatsApp</a>
+<a href="{{act.waHref}}" target="_blank" rel="noopener" onClick="{{sentWa}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; background: #ffffff; border: 1px solid #25A244; color: #1E7E36;">Abrir no WhatsApp</a>
+<button type="button" onClick="{{sendWaApi}}" disabled="{{act.waGen}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; background: #25A244; color: #ffffff; border: 0;">Enviar pelo Smark</button>
 </div>
 </sc-if>
 <sc-if value="{{act.isMail}}" hint-placeholder-val="{{false}}">
@@ -551,7 +579,7 @@ class Component extends DCLogic {
     super(props);
     this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false, menu: '', discarded: {}, skips: {}, toast: null, pickDate: '2026-09-24', pickTime: '09:00', paletteOpen: false, query: '', palIdx: 0, helpOpen: false, autoOpen: true, afterDone: 'next', prefsOpen: false, actionOpen: false, drafts: {}, called: {}, focusRow: '',
       drawer: '', rejected: {}, autonomy: { email: 'rascunhar', wa: 'rascunhar', agenda: 'aprovar', crm: 'aprovar' },
-      guard: { hours: true, bigDeal: true, digest: true, limit: 20 }, autoCount: 0,
+      guard: { hours: true, bigDeal: true, digest: true, limit: 20 }, autoCount: 0, waVar: {}, waGen: false, waSent: {},
       log: [{ at: '09:20', text: 'Registrou a confirmação da visita técnica por WhatsApp (Café Brasil)', auto: true }, { at: '08:42', text: 'Registrou a ligação com Luciana Prado no histórico (Nexa Logística)', auto: true }] };
     try { var au = JSON.parse(localStorage.getItem('fdo.autonomy') || 'null'); if (au && au.autonomy) { this.state.autonomy = Object.assign(this.state.autonomy, au.autonomy); this.state.guard = Object.assign(this.state.guard, au.guard || {}); } } catch (e) {}
     try { var pf = JSON.parse(localStorage.getItem('fdo.prefs') || '{}'); if (typeof pf.autoOpen === 'boolean') this.state.autoOpen = pf.autoOpen; if (/^(next|stay|list)$/.test(pf.afterDone)) this.state.afterDone = pf.afterDone; } catch (e) {}
@@ -626,6 +654,16 @@ class Component extends DCLogic {
     this.waDrafts = {
       t5: 'Oi, Mônica! Como combinado, seguem o guia de primeiros passos do Smark e o link da trilha de treinamentos gravados. Qualquer dúvida da equipe, me chama por aqui. Na sexta levo o checklist da etapa 3.',
       t9: 'Oi, Carlos! Conseguiu ver a proposta que enviei? Posso tirar alguma dúvida hoje?'
+    };
+    // Variações de tom do Mark para WhatsApp
+    this.waVariants = {
+      t5: { curto: 'Oi, Mônica! Seguem o guia de primeiros passos e o link dos treinamentos. Qualquer dúvida, me chama.', formal: 'Olá, Mônica. Conforme combinado, envio o guia de primeiros passos do Smark e o acesso à trilha de treinamentos gravados. Fico à disposição para dúvidas da equipe.', direto: 'Mônica, guia e treinamentos: [link]. Sexta levo o checklist da etapa 3.' },
+      t9: { curto: 'Oi, Carlos! Viu a proposta? Posso ajudar com alguma dúvida?', formal: 'Olá, Carlos. Gostaria de saber se conseguiu analisar a proposta de integração com o ERP enviada em 21/09. Fico à disposição para esclarecer qualquer ponto.', direto: 'Carlos, conseguimos falar 15 min hoje sobre a proposta?' }
+    };
+    // Conversas sincronizadas (WhatsApp Business API): [quem, quando, texto, horas atrás]
+    this.convs = {
+      'Mônica Reis': [['them', 'ontem 17:40', 'Ana, a reunião de onboarding de ontem não deu, tivemos um problema na expedição.', 16], ['me', 'ontem 18:02', 'Sem problema, Mônica! Vou te sugerir um novo horário.', 16], ['them', 'hoje 09:15', 'Visita técnica confirmada para sexta às 15h 👍', 0.75]],
+      'Carlos Mendes': [['me', '21/09 16:10', 'Carlos, segue a proposta de integração com o ERP. Qualquer dúvida, estou por aqui.', 42], ['them', '21/09 16:25', 'Obrigado, vou olhar com o financeiro.', 41.7]]
     };
     this.mailDrafts = {
       l3: ['Como está sendo o primeiro mês com o Smark?', 'Oi, Luciana!\n\nCompletamos o primeiro mês de uso e queria ouvir a equipe: a pesquisa leva 2 minutos.\n\n[link da pesquisa]\n\nAproveito para enviar o contrato revisado, com a cláusula de SLA ajustada.\n\nAbraços,\nAna'],
@@ -706,6 +744,13 @@ class Component extends DCLogic {
     }
     this.setState(patch);
   }
+  waRewrite(key) {
+    var self = this, id = this.state.sel;
+    if (this.timer) clearTimeout(this.timer);
+    var d = Object.assign({}, this.state.drafts); delete d[id];
+    this.setState({ waGen: true, drafts: d });
+    this.timer = setTimeout(function () { var v = Object.assign({}, self.state.waVar); v[id] = key; self.setState({ waGen: false, waVar: v }); }, 800);
+  }
   finishWith(text) {
     var st = this.state, id = st.sel, snap = this.snapshot(id), d = Object.assign({}, st.done); d[id] = true;
     var ns = Object.assign({}, st, { done: d });
@@ -769,7 +814,8 @@ class Component extends DCLogic {
     if (sn.discarded) dis[sn.id] = true; else delete dis[sn.id];
     if (sn.skip) sk[sn.id] = sn.skip; else delete sk[sn.id];
     if (this.toastTimer) clearTimeout(this.toastTimer);
-    this.setState({ done: done, discarded: dis, skips: sk, sel: sn.id, toast: null, menu: '' });
+    var ws = Object.assign({}, st.waSent); if (it && ws[it.contact] && /WhatsApp enviado/.test(t.text)) ws[it.contact] = ws[it.contact].slice(0, -1);
+    this.setState({ done: done, discarded: dis, skips: sk, sel: sn.id, toast: null, menu: '', waSent: ws });
   }
   componentDidMount() { document.addEventListener('keydown', this.onKey); }
   componentWillUnmount() { document.removeEventListener('keydown', this.onKey); if (this.timer) clearTimeout(this.timer); if (this.toastTimer) clearTimeout(this.toastTimer); }
@@ -1109,12 +1155,32 @@ class Component extends DCLogic {
         var kind = s.id === 'f1' || sDone ? '' : /Ligação/.test(s.ch) ? 'call' : s.ch === 'WhatsApp' ? 'wa' : s.ch === 'E-mail' && self.mailDrafts[s.id] ? 'mail' : '';
         var phone = self.phones[s.contact] || '', digits = phone.replace(/\D/g, '');
         var md = self.mailDrafts[s.id] || ['', ''];
-        var wa = st.drafts[s.id] != null ? st.drafts[s.id] : (self.waDrafts[s.id] || '');
+        var wv = st.waVar[s.id] && self.waVariants[s.id] ? self.waVariants[s.id][st.waVar[s.id]] : (self.waDrafts[s.id] || '');
+        var wa = st.drafts[s.id] != null ? st.drafts[s.id] : wv;
         return {
           show: !!kind, open: !!kind && (st.autoOpen || st.actionOpen), closed: !!kind && !st.autoOpen && !st.actionOpen,
           isCall: kind === 'call', isWa: kind === 'wa', isMail: kind === 'mail',
           label: kind === 'call' ? 'Ligar para ' + s.contact : kind === 'wa' ? 'Mensagem no WhatsApp' : 'Escrever e-mail',
           contact: s.contact, phone: phone, tel: 'tel:+' + digits, called: !!st.called[s.id], notCalled: !st.called[s.id],
+          waChips: [['curto', 'Mais curto'], ['formal', 'Mais formal'], ['direto', 'Mais direto']].map(function (c) {
+            var on = st.waVar[s.id] === c[0];
+            return { label: c[1], bg: on ? '#F1E4F6' : '#ffffff', fg: on ? '#8A1CA3' : '#333333', bd: on ? '#C9A6D8' : '#D4D4D4', pick: function () { self.waRewrite(c[0]); } };
+          }),
+          waGen: st.waGen, waReady: !st.waGen,
+          conv: (self.convs[s.contact] || []).concat((st.waSent[s.contact] || []).map(function (t) { return ['me', 'agora', t, 0]; })).map(function (m) {
+            var me = m[0] === 'me';
+            return { text: m[2], at: m[1], who: me ? 'Você' : s.contact.split(' ')[0], align: me ? 'flex-end' : 'flex-start', bg: me ? '#DCF5E3' : '#F5F5F5' };
+          }),
+          hasConv: !!self.convs[s.contact],
+          signal: (function () {
+            var c = self.convs[s.contact]; if (!c) return null;
+            var lastThem = c.filter(function (m) { return m[0] === 'them'; }).pop(), last = c[c.length - 1];
+            if (last[0] === 'me') return { t: 'Sem resposta desde ' + last[1], bg: '#F6E3E1', fg: '#A24037' };
+            if (lastThem[3] > 24) return { t: 'Última resposta em ' + lastThem[1], bg: '#FFF6DA', fg: '#7A5A00' };
+            return { t: 'Respondeu ' + lastThem[1], bg: '#E3F1E4', fg: '#256A29' };
+          })(),
+          // Janela de 24 h do WhatsApp Business: fora dela, só template aprovado
+          outside24h: (function () { var c = self.convs[s.contact]; if (!c) return false; var t = c.filter(function (m) { return m[0] === 'them'; }).pop(); return !t || t[3] > 24; })(),
           script: s.tip, wa: wa, waHref: 'https://wa.me/' + digits + '?text=' + encodeURIComponent(wa),
           to: s.contact + ' <' + (self.emails[s.contact] || '') + '>',
           subject: st.drafts[s.id + ':s'] != null ? st.drafts[s.id + ':s'] : md[0],
@@ -1131,6 +1197,13 @@ class Component extends DCLogic {
         self.setState({ toast: self.showToast('Mensagem copiada', self.snapshot(id)) });
       },
       sentWa: function () { self.finishWith('Mensagem aberta no WhatsApp e registrada no histórico'); },
+      sendWaApi: function () {
+        var id = self.state.sel, it = self.items.filter(function (x) { return x.id === id; })[0], txt = self.renderVals().act.wa;
+        var ws = Object.assign({}, self.state.waSent); ws[it.contact] = (ws[it.contact] || []).concat([txt]);
+        self.setState({ waSent: ws });
+        self.finishWith('WhatsApp enviado para ' + it.contact + ' pelo Smark');
+      },
+      waRegen: function () { var cur = self.state.waVar[self.state.sel]; var order = ['', 'curto', 'direto', 'formal']; self.waRewrite(order[(order.indexOf(cur || '') + 1) % order.length]); },
       sendMail: function () { var st2 = self.state, it = self.items.filter(function (x) { return x.id === st2.sel; })[0]; self.finishWith('E-mail enviado para ' + it.contact); },
       prefsOpen: st.prefsOpen, autoOpen: st.autoOpen,
       afterOpts: [['next', 'Ir para a próxima'], ['stay', 'Ficar na atividade'], ['list', 'Voltar para a lista']].map(function (x) {
