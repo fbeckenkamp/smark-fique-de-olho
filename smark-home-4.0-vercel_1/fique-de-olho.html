@@ -147,6 +147,11 @@ input,textarea{font-family:inherit}
 <button type="button" aria-pressed="{{f.pressed}}" onClick="{{f.pick}}" style="height: 34px; padding: 0 12px; border-radius: 99px; border: 1px solid {{f.bd}}; background: {{f.bg}}; color: {{f.fg}}; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px;">{{f.label}}<span style="font-size: 12px; opacity: 0.85;">{{f.count}}</span></button>
 </sc-for>
 </div>
+<div role="toolbar" aria-label="Ações da lista" style="display: flex; gap: 6px; flex-wrap: wrap; padding: 0 4px;">
+<button type="button" onClick="{{toggleSelecting}}" aria-pressed="{{selecting}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">{{selectLabel}}</button>
+<sc-if value="{{callCount}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{startCalls}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; background: #ffffff; border: 1px solid #0073AD; color: #0073AD;">Sessão de ligações ({{callCount}})</button></sc-if>
+<sc-if value="{{showResolve}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{openResolve}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; background: #FCF9FD; border: 1px solid #C9A6D8; color: #8A1CA3;">Resolver atrasadas com o Mark</button></sc-if>
+</div>
 <div style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 0 2px; min-height: 0;">
 <sc-if value="{{isEmpty}}" hint-placeholder-val="{{false}}">
 <div style="margin-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; color: #66737D; padding: 0 24px;">
@@ -159,7 +164,9 @@ input,textarea{font-family:inherit}
 <div style="display: flex; flex-direction: column; gap: 6px;">
 <div style="display: flex; align-items: center; gap: 8px; padding: 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; color: {{g.fg}};">{{g.label}}<span style="font-weight: 400; text-transform: none; letter-spacing: 0; color: #66737D;">{{g.sub}}</span></div>
 <sc-for list="{{g.items}}" as="it" hint-placeholder-count="4">
-<button type="button" onClick="{{it.pick}}" aria-current="{{it.current}}" style="width: 100%; text-align: left; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid {{it.bd}}; background: {{it.bg}}; color: #333333;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<sc-if value="{{selecting}}" hint-placeholder-val="{{false}}"><input type="checkbox" aria-label="Selecionar {{it.title}}" checked="{{it.picked}}" disabled="{{it.showDone}}" onChange="{{it.togglePick}}" style="width: 18px; height: 18px; flex-shrink: 0; accent-color: #0073AD;"></sc-if>
+<button type="button" onClick="{{it.pick}}" aria-current="{{it.current}}" style="flex: 1; min-width: 0; text-align: left; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid {{it.bd}}; background: {{it.bg}}; color: #333333;">
 <span style="width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: {{it.tileBg}}; color: {{it.tileFg}};">
 <sc-if value="{{it.showDone}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></sc-if>
 <sc-if value="{{it.showFu}}" hint-placeholder-val="{{true}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></sc-if>
@@ -179,10 +186,22 @@ input,textarea{font-family:inherit}
 </span>
 <span style="font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 99px; white-space: nowrap; background: {{it.tagBg}}; color: {{it.tagFg}}; font-family: {{it.tagFont}};">{{it.tag}}</span>
 </button>
-</sc-for>
 </div>
 </sc-for>
 </div>
+</sc-for>
+</div>
+<sc-if value="{{hasPicked}}" hint-placeholder-val="{{false}}">
+<div role="toolbar" aria-label="Ações em lote" style="border-top: 1px solid #EAEBEF; padding: 12px 4px 0; display: flex; flex-direction: column; gap: 8px;">
+<div style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 13px; font-weight: 600; color: #333333; flex-grow: 1;">{{pickedCount}} selecionadas</span>
+<button type="button" onClick="{{pickAll}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; background: transparent; border: 0; color: #0073AD;">Selecionar todas</button></div>
+<div style="display: flex; gap: 6px;">
+<button type="button" onClick="{{bulkDraft}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; flex: 1; background: #8A1CA3; border: 0; color: #ffffff;">Mark rascunha</button>
+<button type="button" onClick="{{bulkSnooze}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; flex: 1; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Adiar p/ amanhã</button>
+<button type="button" onClick="{{bulkDone}}" style="height: 30px; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; flex: 1; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Concluir</button>
+</div>
+</div>
+</sc-if>
 </section>
 
 <!-- Execution panel -->
@@ -597,6 +616,81 @@ input,textarea{font-family:inherit}
 </div>
 </aside>
 </sc-if>
+<sc-if value="{{bulkOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{closeBulk}}" style="position: fixed; inset: 0; z-index: 30; background: rgba(30,30,30,0.35); display: flex; justify-content: center; align-items: flex-start; padding-top: 80px;">
+<div role="dialog" aria-label="Rascunhos do Mark" onClick="{{stop}}" style="width: 620px; max-height: 80vh; overflow-y: auto; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 48px rgba(0,0,0,0.25); padding: 20px 24px; display: flex; flex-direction: column; gap: 12px;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600;">Rascunhos do Mark</h2>
+<p style="margin: 0; font-size: 13px; color: #5F5F5F;">Revise um a um. Desmarque o que não deve sair agora.</p>
+<sc-for list="{{bulkDrafts}}" as="d" hint-placeholder-count="3">
+<label style="display: flex; gap: 10px; align-items: flex-start; border: 1px solid #EAEBEF; border-radius: 12px; padding: 12px 14px; opacity: {{d.opacity}};">
+<input type="checkbox" checked="{{d.on}}" onChange="{{d.toggle}}" style="margin-top: 3px;">
+<span style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+<span style="font-size: 14px; font-weight: 600; color: #333333;">{{d.title}}</span>
+<span style="font-size: 12px; color: #66737D;">{{d.who}} · {{d.ch}}</span>
+<span style="font-size: 13px; line-height: 1.45; color: #333333; background: #FCF9FD; border-radius: 8px; padding: 8px 10px;">{{d.text}}</span>
+</span>
+</label>
+</sc-for>
+<div style="display: flex; gap: 8px; justify-content: flex-end;">
+<button type="button" onClick="{{closeBulk}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Cancelar</button>
+<button type="button" onClick="{{bulkSend}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #8A1CA3; border: 0; color: #ffffff;">{{bulkSendLabel}}</button>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{planOpen}}" hint-placeholder-val="{{false}}">
+<div onClick="{{closePlan}}" style="position: fixed; inset: 0; z-index: 30; background: rgba(30,30,30,0.35); display: flex; justify-content: center; align-items: flex-start; padding-top: 80px;">
+<div role="dialog" aria-label="Plano do Mark para as atrasadas" onClick="{{stop}}" style="width: 680px; max-height: 80vh; overflow-y: auto; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 48px rgba(0,0,0,0.25); padding: 20px 24px; display: flex; flex-direction: column; gap: 12px;">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600;">Plano do Mark para as atrasadas</h2>
+<p style="margin: 0; font-size: 13px; color: #5F5F5F;">O Mark executa o que já está pronto, traz para hoje o que é prioritário, descarta o que perdeu sentido e reagenda o resto. Ajuste antes de aplicar.</p>
+<sc-for list="{{planRows}}" as="r" hint-placeholder-count="3">
+<div style="border-top: 1px solid #EAEBEF; padding-top: 10px; display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 14px; font-weight: 600; color: #333333;">{{r.title}}</span>
+<span style="font-size: 12px; color: #A24037;">{{r.sub}}</span>
+<div role="radiogroup" aria-label="Ação para {{r.title}}" style="display: flex; gap: 6px; flex-wrap: wrap;">
+<sc-for list="{{r.opts}}" as="o" hint-placeholder-count="3">
+<button type="button" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}" style="height: 28px; padding: 0 10px; border-radius: 99px; border: 1px solid {{o.bd}}; background: {{o.bg}}; color: {{o.fg}}; font-size: 12px; font-weight: 600;">{{o.label}}</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+<div style="display: flex; gap: 8px; justify-content: flex-end;">
+<button type="button" onClick="{{closePlan}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Cancelar</button>
+<button type="button" onClick="{{applyPlan}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #8A1CA3; border: 0; color: #ffffff;">Aplicar plano</button>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{callsOpen}}" hint-placeholder-val="{{false}}">
+<div style="position: fixed; inset: 0; z-index: 30; background: rgba(30,30,30,0.45); display: flex; justify-content: center; align-items: flex-start; padding-top: 70px;">
+<div role="dialog" aria-label="Sessão de ligações" style="width: 640px; background: #ffffff; border-radius: 18px; box-shadow: 0 20px 48px rgba(0,0,0,0.3); padding: 22px 26px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; align-items: center; gap: 10px;"><h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600;">Sessão de ligações</h2><span style="flex-grow: 1;"></span>
+<button type="button" onClick="{{closeCalls}}" aria-label="Encerrar sessão" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #DDDDDD; background: #ffffff; color: #333333; font-size: 13px; font-weight: 600;">Encerrar</button></div>
+<sc-if value="{{callRunning}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 12px; font-weight: 600; color: #66737D;">{{call.progress}}</span>
+<div style="height: 6px; border-radius: 99px; background: #EEEEEE; overflow: hidden;"><div style="height: 6px; width: {{call.pct}}; background: #0073AD;"></div></div></div>
+<div style="display: flex; align-items: center; gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1;"><span style="font-size: 22px; font-weight: 600; color: #333333;">{{call.contact}}</span><span style="font-size: 14px; color: #5F5F5F;">{{call.company}} · {{call.title}}</span></div>
+<a href="{{call.tel}}" style="flex-shrink: 0; white-space: nowrap; height: 48px; padding: 0 18px; border-radius: 12px; background: #0073AD; color: #ffffff; font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>Ligar · {{call.phone}}</a>
+</div>
+<div style="border-left: 3px solid #E4D3EC; padding-left: 12px; display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 12px; font-weight: 600; color: #8A1CA3; text-transform: uppercase; letter-spacing: 0.06em;">Roteiro do Mark</span>
+<span style="font-size: 14px; font-weight: 600; color: #333333;">{{call.nba}}</span>
+<span style="font-size: 14px; line-height: 1.5; color: #333333;">{{call.script}}</span></div>
+<textarea aria-label="Anotações da ligação" value="{{call.note}}" onChange="{{onCallNote}}" placeholder="Anotações da ligação…" style="width: 100%; height: 80px; box-sizing: border-box; border: 1px solid #DDDDDD; border-radius: 12px; padding: 10px 12px; font-size: 14px; resize: vertical;"></textarea>
+<div style="display: flex; gap: 8px; justify-content: flex-end;">
+<button type="button" onClick="{{callSkip}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Pular</button>
+<button type="button" onClick="{{callRetry}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Não atendeu · tentar amanhã</button>
+<button type="button" onClick="{{callOk}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #256A29; border: 0; color: #ffffff;">Atendeu · concluir</button>
+</div>
+</sc-if>
+<sc-if value="{{callFinished}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; font-size: 16px; color: #333333;">Sessão concluída: {{call.summary}}.</p>
+<div style="display: flex; justify-content: flex-end;"><button type="button" onClick="{{closeCalls}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #0073AD; border: 0; color: #ffffff;">Voltar para a lista</button></div>
+</sc-if>
+</div>
+</div>
+</sc-if>
 <sc-if value="{{paletteOpen}}" hint-placeholder-val="{{false}}">
 <div onClick="{{closeOverlays}}" style="position: fixed; inset: 0; z-index: 30; background: rgba(30,30,30,0.35); display: flex; justify-content: center; align-items: flex-start; padding-top: 120px;">
 <div role="dialog" aria-label="Buscar atividade" onClick="{{stop}}" style="width: 560px; background: #ffffff; border-radius: 16px; box-shadow: 0 20px 48px rgba(0,0,0,0.25); overflow: hidden;">
@@ -640,7 +734,7 @@ class Component extends DCLogic {
     super(props);
     this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false, menu: '', discarded: {}, skips: {}, toast: null, pickDate: '2026-09-24', pickTime: '09:00', paletteOpen: false, query: '', palIdx: 0, helpOpen: false, autoOpen: true, afterDone: 'next', prefsOpen: false, actionOpen: false, drafts: {}, called: {}, focusRow: '',
       drawer: '', rejected: {}, autonomy: { email: 'rascunhar', wa: 'rascunhar', agenda: 'aprovar', crm: 'aprovar' },
-      guard: { hours: true, bigDeal: true, digest: true, limit: 20 }, autoCount: 0, waVar: {}, waGen: false, waSent: {}, notes: {}, post: null, transcribing: false, briefOpen: true, bannerOff: false,
+      guard: { hours: true, bigDeal: true, digest: true, limit: 20 }, autoCount: 0, waVar: {}, waGen: false, waSent: {}, notes: {}, post: null, transcribing: false, briefOpen: true, bannerOff: false, selecting: false, picked: {}, bulk: '', bulkSkip: {}, plan: {}, calls: null,
       log: [{ at: '09:20', text: 'Registrou a confirmação da visita técnica por WhatsApp (Café Brasil)', auto: true }, { at: '08:42', text: 'Registrou a ligação com Luciana Prado no histórico (Nexa Logística)', auto: true }] };
     try { var au = JSON.parse(localStorage.getItem('fdo.autonomy') || 'null'); if (au && au.autonomy) { this.state.autonomy = Object.assign(this.state.autonomy, au.autonomy); this.state.guard = Object.assign(this.state.guard, au.guard || {}); } } catch (e) {}
     try { var pf = JSON.parse(localStorage.getItem('fdo.prefs') || '{}'); if (typeof pf.autoOpen === 'boolean') this.state.autoOpen = pf.autoOpen; if (/^(next|stay|list)$/.test(pf.afterDone)) this.state.afterDone = pf.afterDone; } catch (e) {}
@@ -932,8 +1026,56 @@ class Component extends DCLogic {
     if (it && it._prevCtx) { it.ctx[0] = { k: 'Oportunidade', v: it._prevCtx }; it._prevCtx = null; }
     this.setState({ done: done, log: st.log.filter(function (_, j) { return j !== i; }), autoCount: Math.max(0, st.autoCount - (e.auto ? 1 : 0)) });
   }
+  pickedIds() { var p = this.state.picked; return this.visible(this.state).filter(function (it) { return p[it.id]; }).map(function (it) { return it.id; }); }
+  // Aplica uma ação a várias atividades e oferece Desfazer para todas
+  bulkApply(ids, fn, text, extra) {
+    var self = this, st = this.state, snaps = ids.map(function (id) { return self.snapshot(id); });
+    var patch = { done: Object.assign({}, st.done), discarded: Object.assign({}, st.discarded), log: st.log, autoCount: st.autoCount };
+    ids.forEach(function (id) { fn(id, patch); });
+    var ns = Object.assign({}, st, patch);
+    patch.sel = patch.done[st.sel] || ids.indexOf(st.sel) >= 0 ? this.firstOpen(ns) : st.sel;
+    this.setState(Object.assign(patch, { picked: {}, selecting: false, bulk: '', menu: '', toast: this.showToast(text, { multi: snaps, id: st.sel, sel: st.sel }) }, extra || {}));
+  }
+  draftFor(it) {
+    if (it.id === 'f1') return { ch: 'E-mail', text: this.variants[0].subject + ' — ' + this.variants[0].body.split('\n').filter(Boolean)[1] };
+    if (this.mailDrafts[it.id]) return { ch: 'E-mail', text: this.mailDrafts[it.id][0] + ' — ' + this.mailDrafts[it.id][1].split('\n').filter(Boolean)[1] };
+    if (this.waDrafts[it.id]) return { ch: 'WhatsApp', text: this.waDrafts[it.id] };
+    if (this.prep[it.id]) return { ch: it.ch, text: this.prep[it.id][1] };
+    return { ch: it.ch, text: 'Mark sugere: ' + (it.tip || it.nba) };
+  }
+  // Plano do Mark para atrasadas: executar o que está pronto, trazer para hoje o que é prioritário,
+  // descartar o que é antigo e de baixa prioridade, e reagendar o resto para amanhã
+  planFor(it) {
+    if (this.prep[it.id]) return 'exec';
+    if (it.score >= 60) return 'hoje';
+    if (it.score < 35 && it.off <= -14) return 'descartar';
+    return 'amanha';
+  }
+  callResult(kind) {
+    var self = this, c = this.state.calls, id = c.ids[c.idx], res = Object.assign({}, c.res); res[id] = kind;
+    var patch = { calls: Object.assign({}, c, { idx: c.idx + 1, res: res, note: '' }) };
+    if (kind === 'ok') {
+      patch.done = Object.assign({}, this.state.done); patch.done[id] = true;
+      if (c.note.trim()) { var nn = Object.assign({}, this.state.notes); nn[id] = c.note; patch.notes = nn; }
+    }
+    if (kind === 'retry') { var x = this.items.filter(function (y) { return y.id === id; })[0]; x.off = 1; x.time = '09:00'; }
+    this.setState(patch);
+  }
   undo() {
     var t = this.state.toast; if (!t) return;
+    if (t.snap.multi) {
+      var st0 = this.state, self = this, done0 = Object.assign({}, st0.done), dis0 = Object.assign({}, st0.discarded), ids0 = {};
+      t.snap.multi.forEach(function (sn) {
+        var x = self.items.filter(function (y) { return y.id === sn.id; })[0];
+        x.off = sn.off; x.time = sn.time; ids0[sn.id] = 1;
+        if (x._prevCtx) { x.ctx[0] = { k: 'Oportunidade', v: x._prevCtx }; x._prevCtx = null; }
+        if (sn.done) done0[sn.id] = true; else delete done0[sn.id];
+        if (sn.discarded) dis0[sn.id] = true; else delete dis0[sn.id];
+      });
+      if (this.toastTimer) clearTimeout(this.toastTimer);
+      this.setState({ phase: ids0.f1 && !done0.f1 ? 'ready' : st0.phase, done: done0, discarded: dis0, toast: null, sel: t.snap.sel, log: st0.log.filter(function (e) { return !(e.id && ids0[e.id] && t.snap.multi.length); }) });
+      return;
+    }
     var sn = t.snap, it = this.items.filter(function (x) { return x.id === sn.id; })[0], st = this.state;
     var done = Object.assign({}, st.done), dis = Object.assign({}, st.discarded), sk = Object.assign({}, st.skips);
     it.off = sn.off; it.time = sn.time;
@@ -991,7 +1133,8 @@ class Component extends DCLogic {
     var typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
     if (mod && (k === 'k' || k === 'K')) { e.preventDefault(); this.setState({ paletteOpen: !st.paletteOpen, query: '', palIdx: 0, helpOpen: false, menu: '' }); return; }
     if (k === 'Escape') {
-      if (st.paletteOpen || st.helpOpen || st.menu || st.prefsOpen || st.drawer) { e.preventDefault(); this.setState({ paletteOpen: false, helpOpen: false, menu: '', prefsOpen: false, drawer: '' }); }
+      if (st.paletteOpen || st.helpOpen || st.menu || st.prefsOpen || st.drawer || st.bulk) { e.preventDefault(); this.setState({ paletteOpen: false, helpOpen: false, menu: '', prefsOpen: false, drawer: '', bulk: '' }); }
+      else if (st.calls) { e.preventDefault(); this.renderVals().closeCalls(); }
       return;
     }
     if (st.paletteOpen) {
@@ -1006,7 +1149,7 @@ class Component extends DCLogic {
       else if (v.act.isMail && v.act.open) { e.preventDefault(); v.sendMail(); }
       return;
     }
-    if (typing || mod || e.altKey) return;
+    if (typing || mod || e.altKey || st.calls || st.bulk) return;
     if (k === '?') { e.preventDefault(); this.setState({ helpOpen: !st.helpOpen }); return; }
     if (st.helpOpen) return;
     if (k === 'j' || k === 'J' || k === 'ArrowDown') { e.preventDefault(); this.step(1); }
@@ -1170,6 +1313,8 @@ class Component extends DCLogic {
         titleFg: done ? '#66737D' : '#333333', deco: done ? 'line-through' : 'none',
         tag: tg.t, tagBg: tg.bg, tagFg: tg.fg, tagFont: tg.mono ? "'Geist Mono', monospace" : 'inherit',
         bg: on ? '#EAF3F9' : '#ffffff', bd: on ? '#0073AD' : '#EAEBEF', current: on ? 'true' : 'false',
+        picked: !!st.picked[it.id], canPick: !done,
+        togglePick: function () { var p = Object.assign({}, self.state.picked); if (p[it.id]) delete p[it.id]; else p[it.id] = true; self.setState({ picked: p }); },
         pick: function () { self.setState({ sel: it.id, whyOpen: false, menu: '', actionOpen: false, post: null }); }
       });
     });
@@ -1431,6 +1576,72 @@ class Component extends DCLogic {
         return { text: 'Em ' + mins + ' min: ' + next.title + ' · ' + next.company + ' (' + next.time + ')', open: function () { self.jumpTo(next.id); self.setState({ briefOpen: true }); } };
       })(),
       dismissBanner: function () { self.setState({ bannerOff: true }); },
+      selecting: st.selecting, pickedCount: this.pickedIds().length, hasPicked: this.pickedIds().length > 0,
+      selectLabel: st.selecting ? 'Cancelar seleção' : 'Selecionar',
+      toggleSelecting: function () { self.setState({ selecting: !self.state.selecting, picked: {} }); },
+      pickAll: function () { var p = {}; self.visible(self.state).forEach(function (it) { if (!self.state.done[it.id]) p[it.id] = true; }); self.setState({ picked: p }); },
+      bulkSnooze: function () { self.bulkApply(self.pickedIds(), function (id) { var x = self.items.filter(function (y) { return y.id === id; })[0]; x.off = 1; x.time = '09:00'; }, self.pickedIds().length + ' adiadas para amanhã, 09:00'); },
+      bulkDone: function () { self.bulkApply(self.pickedIds(), function (id, p) { p.done[id] = true; }, self.pickedIds().length + ' concluídas'); },
+      bulkDraft: function () { self.setState({ bulk: 'drafts', bulkSkip: {} }); },
+      bulkOpen: st.bulk === 'drafts',
+      bulkDrafts: this.pickedIds().map(function (id) {
+        var it = self.items.filter(function (y) { return y.id === id; })[0], d = self.draftFor(it), on = !st.bulkSkip[id];
+        return { title: it.title, who: it.contact + ' · ' + it.company, ch: d.ch, text: d.text, on: on, opacity: on ? '1' : '0.45',
+          toggle: function () { var b = Object.assign({}, self.state.bulkSkip); b[id] = !b[id]; self.setState({ bulkSkip: b }); } };
+      }),
+      bulkSendLabel: (function () { var n = self.pickedIds().filter(function (id) { return !st.bulkSkip[id]; }).length; return 'Enviar ' + n + (n === 1 ? ' rascunho' : ' rascunhos'); })(),
+      bulkSend: function () {
+        var ids = self.pickedIds().filter(function (id) { return !self.state.bulkSkip[id]; });
+        self.bulkApply(ids, function (id, p) { p.done[id] = true; }, 'Mark enviou ' + ids.length + (ids.length === 1 ? ' rascunho' : ' rascunhos'), ids.indexOf('f1') >= 0 ? { phase: 'sent' } : null);
+      },
+      closeBulk: function () { self.setState({ bulk: '' }); },
+      // Resolver atrasadas
+      showResolve: this.items.some(function (it) { return it.off < 0 && !st.done[it.id]; }),
+      openResolve: function () { var pl = {}; self.items.forEach(function (it) { if (it.off < 0 && !self.state.done[it.id]) pl[it.id] = self.planFor(it); }); self.setState({ bulk: 'plan', plan: pl }); },
+      planOpen: st.bulk === 'plan',
+      planRows: Object.keys(st.plan).map(function (id) {
+        var it = self.items.filter(function (y) { return y.id === id; })[0];
+        return { title: it.title, sub: it.company + ' · atrasada há ' + (-it.off) + (it.off === -1 ? ' dia' : ' dias'),
+          opts: [['exec', self.prep[id] ? 'Executar: ' + self.prep[id][1] : ''], ['hoje', 'Trazer para hoje, 14:30'], ['amanha', 'Amanhã, 09:00'], ['descartar', 'Descartar']].filter(function (o) { return o[1]; }).map(function (o) {
+            var on = st.plan[id] === o[0];
+            return { label: o[1], bg: on ? '#8A1CA3' : '#ffffff', fg: on ? '#ffffff' : '#333333', bd: on ? '#8A1CA3' : '#D4D4D4', on: on ? 'true' : 'false',
+              pick: function () { var pl = Object.assign({}, self.state.plan); pl[id] = o[0]; self.setState({ plan: pl }); } };
+          }) };
+      }),
+      applyPlan: function () {
+        var pl = self.state.plan, ids = Object.keys(pl), n = { exec: 0, hoje: 0, amanha: 0, descartar: 0 };
+        ids.forEach(function (id) { n[pl[id]]++; });
+        self.bulkApply(ids, function (id, p) {
+          var x = self.items.filter(function (y) { return y.id === id; })[0];
+          if (pl[id] === 'exec') { var r = self.execPrep(Object.assign({}, self.state, p), id, false); p.done = r.done; p.log = r.log; }
+          else if (pl[id] === 'hoje') { x.off = 0; x.time = '14:30'; }
+          else if (pl[id] === 'amanha') { x.off = 1; x.time = '09:00'; }
+          else { p.done[id] = true; p.discarded[id] = true; }
+        }, 'Plano aplicado: ' + n.exec + ' executadas, ' + n.hoje + ' para hoje, ' + n.amanha + ' para amanhã, ' + n.descartar + ' descartadas', { view: 'day', offset: 0, range: '' });
+      },
+      closePlan: function () { self.setState({ bulk: '' }); },
+      // Sessão de ligações
+      callCount: this.visible(st).filter(function (it) { return /Ligação/.test(it.ch) && !st.done[it.id]; }).length,
+      startCalls: function () {
+        var ids = self.visible(self.state).filter(function (it) { return /Ligação/.test(it.ch) && !self.state.done[it.id]; }).map(function (it) { return it.id; });
+        if (ids.length) self.setState({ calls: { ids: ids, idx: 0, res: {}, note: '' } });
+      },
+      callsOpen: !!st.calls,
+      call: (function () {
+        var c = st.calls; if (!c) return null;
+        if (c.idx >= c.ids.length) {
+          var r = { ok: 0, retry: 0, skip: 0 }; Object.keys(c.res).forEach(function (k) { r[c.res[k]]++; });
+          return { finished: true, summary: r.ok + (r.ok === 1 ? ' atendida e concluída' : ' atendidas e concluídas') + ' · ' + r.retry + ' para tentar amanhã · ' + r.skip + (r.skip === 1 ? ' pulada' : ' puladas') };
+        }
+        var it = self.items.filter(function (y) { return y.id === c.ids[c.idx]; })[0], phone = self.phones[it.contact] || '';
+        return { finished: false, progress: 'Ligação ' + (c.idx + 1) + ' de ' + c.ids.length, pct: ((c.idx) / c.ids.length * 100) + '%',
+          title: it.title, contact: it.contact, company: it.company, phone: phone, tel: 'tel:+' + phone.replace(/\D/g, ''), script: it.tip, nba: it.nba, note: c.note };
+      })(),
+      callRunning: !!st.calls && st.calls.idx < st.calls.ids.length,
+      callFinished: !!st.calls && st.calls.idx >= st.calls.ids.length,
+      onCallNote: function (e) { var c = Object.assign({}, self.state.calls, { note: e.target.value }); self.setState({ calls: c }); },
+      callOk: function () { self.callResult('ok'); }, callRetry: function () { self.callResult('retry'); }, callSkip: function () { self.callResult('skip'); },
+      closeCalls: function () { self.setState({ calls: null, sel: self.firstOpen(self.state) }); },
       whyOpen: st.whyOpen, whyLabel: st.whyOpen ? 'Ocultar' : 'Por quê?', whyExpanded: st.whyOpen ? 'true' : 'false',
       toggleWhy: function () { self.setState({ whyOpen: !self.state.whyOpen }); }
     };
