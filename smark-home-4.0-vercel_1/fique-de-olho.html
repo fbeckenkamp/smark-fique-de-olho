@@ -109,9 +109,23 @@ input,textarea{font-family:inherit}
 <!-- Activity list -->
 <section aria-label="Atividades" style="background: #ffffff; border: 1px solid #DDDDDD; border-radius: 18px; padding: 20px 16px 16px; display: flex; flex-direction: column; gap: 14px; height: 1160px; box-sizing: border-box;">
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 0 4px;">
-<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600;">{{listTitle}}</h2>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 600; white-space: nowrap;">{{listTitle}}</h2>
 <span style="font-size: 13px; color: #66737D;">{{listSub}}</span>
-<button type="button" onClick="{{openHelp}}" title="Atalhos de teclado" style="margin-left: auto; align-self: center; height: 28px; padding: 0 8px; border-radius: 8px; border: 1px solid #DDDDDD; background: #ffffff; color: #5F5F5F; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 6px;">Atalhos <kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid #D4D4D4; background: #F5F5F5; color: #5F5F5F;">?</kbd></button>
+<span style="margin-left: auto; position: relative; align-self: center; display: flex; gap: 6px;">
+<button type="button" onClick="{{togglePrefs}}" aria-expanded="{{prefsOpen}}" title="Preferências" aria-label="Preferências" style="width: 28px; height: 28px; padding: 0; border-radius: 8px; border: 1px solid #DDDDDD; background: #ffffff; color: #5F5F5F; display: flex; align-items: center; justify-content: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+<sc-if value="{{prefsOpen}}" hint-placeholder-val="{{false}}">
+<div role="dialog" aria-label="Preferências" style="position: absolute; top: 36px; right: 0; z-index: 6; width: 280px; background: #ffffff; border: 1px solid #DDDDDD; border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,0.12); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;">
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #333333;"><input type="checkbox" checked="{{autoOpen}}" onChange="{{toggleAutoOpen}}"> Abrir ação automaticamente</label>
+<div role="radiogroup" aria-label="Depois de concluir" style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Depois de concluir</span>
+<sc-for list="{{afterOpts}}" as="o" hint-placeholder-count="3">
+<label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #333333;"><input type="radio" name="fdo-after" checked="{{o.on}}" onChange="{{o.pick}}"> {{o.label}}</label>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<button type="button" onClick="{{openHelp}}" title="Atalhos de teclado" style="height: 28px; padding: 0 4px; border-radius: 8px; border: 1px solid #DDDDDD; background: #ffffff; display: flex; align-items: center;" aria-label="Atalhos de teclado"><kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid #D4D4D4; background: #F5F5F5; color: #5F5F5F;">?</kbd></button>
+</span>
 </div>
 <div role="group" aria-label="Filtrar por tipo" style="display: flex; gap: 6px; flex-wrap: wrap; padding: 0 4px;">
 <sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
@@ -229,6 +243,42 @@ input,textarea{font-family:inherit}
 <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; line-height: 1.45; color: #5F5F5F;">
 <sc-for list="{{sel.why}}" as="w" hint-placeholder-count="3"><li>{{w}}</li></sc-for>
 </ul>
+</sc-if>
+</div>
+</sc-if>
+
+<!-- Channel action -->
+<sc-if value="{{act.closed}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{openAction}}" style="align-self: flex-start; height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; background: #ffffff; border: 1px solid #0073AD; color: #0073AD;">Abrir ação: {{act.label}}</button>
+</sc-if>
+<sc-if value="{{act.open}}" hint-placeholder-val="{{false}}">
+<div style="border: 1px solid #DDDDDD; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+<sc-if value="{{act.isCall}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; gap: 16px; align-items: flex-start;">
+<div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;">
+<a href="{{act.tel}}" onClick="{{markCalled}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; height: 44px; background: {{accent}}; color: #ffffff; border: 0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>{{act.label}}</a>
+<span style="font-family: 'Geist Mono', monospace; font-size: 13px; color: #5F5F5F;">{{act.phone}}</span>
+<sc-if value="{{act.called}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; font-weight: 600; color: #256A29;">Ligação iniciada · registre o resultado abaixo</span></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px; border-left: 3px solid #E4D3EC; padding-left: 12px;">
+<span style="font-size: 12px; font-weight: 600; color: #8A1CA3; text-transform: uppercase; letter-spacing: 0.06em;">Roteiro do Mark</span>
+<span style="font-size: 14px; line-height: 1.5; color: #333333;">{{act.script}}</span>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{act.isWa}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">WhatsApp · {{act.contact}} · {{act.phone}}</span>
+<textarea aria-label="Mensagem de WhatsApp" value="{{act.wa}}" onChange="{{onDraft}}" style="width: 100%; height: 96px; box-sizing: border-box; border: 1px solid #DDDDDD; border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; resize: vertical;"></textarea>
+<div style="display: flex; gap: 8px; justify-content: flex-end;">
+<button type="button" onClick="{{copyWa}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Copiar</button>
+<a href="{{act.waHref}}" target="_blank" rel="noopener" onClick="{{sentWa}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; background: #25A244; color: #ffffff; border: 0;">Abrir no WhatsApp</a>
+</div>
+</sc-if>
+<sc-if value="{{act.isMail}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; gap: 10px; align-items: center; font-size: 14px;"><span style="width: 60px; color: #66737D;">Para</span><span style="color: #333333;">{{act.to}}</span></div>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 14px;"><span style="width: 60px; color: #66737D;">Assunto</span><input type="text" value="{{act.subject}}" onChange="{{onDraftSubject}}" style="flex-grow: 1; height: 38px; border: 1px solid #DDDDDD; border-radius: 10px; padding: 0 12px; font-size: 14px;"></label>
+<textarea aria-label="Corpo do e-mail" value="{{act.body}}" onChange="{{onDraft}}" style="width: 100%; height: 170px; box-sizing: border-box; border: 1px solid #DDDDDD; border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; resize: vertical;"></textarea>
+<div style="display: flex; justify-content: flex-end;"><button type="button" onClick="{{sendMail}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; height: 44px; background: {{accent}}; color: #ffffff; border: 0;">Enviar e-mail</button></div>
 </sc-if>
 </div>
 </sc-if>
@@ -370,7 +420,7 @@ input,textarea{font-family:inherit}
 </sc-if>
 <div style="display: flex; gap: 10px; justify-content: flex-end;">
 <button type="button" onClick="{{toggleSkip}}" aria-expanded="{{skipOpen}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; font-size: 14px; font-weight: 600;">Pular</button>
-<button type="button" onClick="{{complete}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: {{accent}}; color: #ffffff; border: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">Concluir e ir para a próxima <kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.45); color: #ffffff;">E</kbd></button>
+<button type="button" onClick="{{complete}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: {{accent}}; color: #ffffff; border: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">{{completeLabel}} <kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.45); color: #ffffff;">E</kbd></button>
 </div>
 </div>
 </sc-if>
@@ -420,7 +470,8 @@ input,textarea{font-family:inherit}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false, menu: '', discarded: {}, skips: {}, toast: null, pickDate: '2026-09-24', pickTime: '09:00', paletteOpen: false, query: '', palIdx: 0, helpOpen: false };
+    this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false, menu: '', discarded: {}, skips: {}, toast: null, pickDate: '2026-09-24', pickTime: '09:00', paletteOpen: false, query: '', palIdx: 0, helpOpen: false, autoOpen: true, afterDone: 'next', prefsOpen: false, actionOpen: false, drafts: {}, called: {}, focusRow: '' };
+    try { var pf = JSON.parse(localStorage.getItem('fdo.prefs') || '{}'); if (typeof pf.autoOpen === 'boolean') this.state.autoOpen = pf.autoOpen; if (/^(next|stay|list)$/.test(pf.afterDone)) this.state.afterDone = pf.afterDone; } catch (e) {}
     this.onKey = this.onKey.bind(this);
     this.isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
     this.toastTimer = null;
@@ -486,6 +537,20 @@ class Component extends DCLogic {
       n7: [64, 'Usar o modelo com implantação em fases', ['Oportunidade de R$ 84.000', 'Fechamento previsto para 30/09']]
     };
     this.items.forEach(function (it) { var p = PRIO[it.id] || [0, '', []]; it.score = p[0]; it.nba = p[1]; it.why = p[2]; });
+    // Contatos (números fictícios) e rascunhos do Mark por canal
+    this.phones = { 'Sérgio Pontes': '+55 51 99000-0101', 'Fernanda Luz': '+55 54 99000-0102', 'Rafael Lima': '+55 54 99000-0103', 'Dr. Henrique Alves': '+55 51 99000-0104',
+      'Juliana Ramos': '+55 51 99000-0105', 'Luciana Prado': '+55 51 99000-0106', 'Mônica Reis': '+55 51 99000-0107', 'Carlos Mendes': '+55 51 99000-0108' };
+    this.waDrafts = {
+      t5: 'Oi, Mônica! Como combinado, seguem o guia de primeiros passos do Smark e o link da trilha de treinamentos gravados. Qualquer dúvida da equipe, me chama por aqui. Na sexta levo o checklist da etapa 3.',
+      t9: 'Oi, Carlos! Conseguiu ver a proposta que enviei? Posso tirar alguma dúvida hoje?'
+    };
+    this.mailDrafts = {
+      l3: ['Como está sendo o primeiro mês com o Smark?', 'Oi, Luciana!\n\nCompletamos o primeiro mês de uso e queria ouvir a equipe: a pesquisa leva 2 minutos.\n\n[link da pesquisa]\n\nAproveito para enviar o contrato revisado, com a cláusula de SLA ajustada.\n\nAbraços,\nAna'],
+      l7: ['Contrato revisado: ajuste na cláusula 7 (SLA)', 'Oi, Luciana!\n\nSegue o contrato revisado (Contrato_Nexa_v2.pdf). A única mudança está na cláusula 7: o SLA de atendimento passa a ser de 4 horas úteis, como pedido pelo jurídico de vocês.\n\nSe estiver tudo certo, a assinatura pode ser feita pelo link do documento.\n\nAbraços,\nAna'],
+      t4: ['Condições para pagamento à vista', 'Oi, Paulo!\n\nSobre o pagamento à vista: conseguimos 8% de desconto sobre o valor anual, o que leva a proposta de R$ 84.000 para R$ 77.280.\n\nAlinhei com a Marina na reunião de hoje. Posso atualizar a proposta com essa condição?\n\nAbraços,\nAna'],
+      n5: ['Case: como a Vita Saúde integrou a agenda das duas unidades', 'Olá, Dr. Henrique!\n\nComo conversamos, segue o case da rede Vita Saúde: duas unidades, agenda integrada e acompanhamento dos pacientes num só lugar. O perfil é bem parecido com o da Clínica Santé.\n\nPosso reservar 20 minutos para mostrar como ficaria para vocês?\n\nAbraços,\nAna']
+    };
+    this.emails = { 'Luciana Prado': 'luciana.prado@nexalog.com.br', 'Paulo Teixeira': 'paulo.teixeira@grupovertice.com.br', 'Dr. Henrique Alves': 'henrique.alves@clinicasante.com.br' };
     // Horário livre sugerido pelo Mark para reagendar (agenda do vendedor e do cliente)
     this.items.forEach(function (it) { if (it.id === 'l5') it.slot = { off: 2, time: '15:00' }; });
     this.variants = [
@@ -533,6 +598,11 @@ class Component extends DCLogic {
     }
     this.setState(patch);
   }
+  finishWith(text) {
+    var st = this.state, id = st.sel, snap = this.snapshot(id), d = Object.assign({}, st.done); d[id] = true;
+    var ns = Object.assign({}, st, { done: d });
+    this.setState(Object.assign({ done: d, whyOpen: false, menu: '', actionOpen: false, toast: this.showToast(text, snap) }, this.afterComplete(ns, id)));
+  }
   undo() {
     var t = this.state.toast; if (!t) return;
     var sn = t.snap, it = this.items.filter(function (x) { return x.id === sn.id; })[0], st = this.state;
@@ -550,7 +620,22 @@ class Component extends DCLogic {
     // Só elementos visíveis: o template oculto em <x-dc> repete o markup
     function shown(sel) { return Array.prototype.filter.call(document.querySelectorAll(sel), function (el) { return el.offsetParent; })[0]; }
     if (this.state.paletteOpen && !ps.paletteOpen) { var inp = shown('input[data-palette]'); if (inp) inp.focus(); }
+    if (this.state.focusRow && this.state.focusRow !== ps.focusRow) {
+      var row = shown('section[aria-label="Atividades"] button[aria-current="true"]'); if (row) row.focus();
+      this.setState({ focusRow: '' });
+    }
     if (this.state.sel !== ps.sel) { var cur = shown('section[aria-label="Atividades"] button[aria-current="true"]'); if (cur) cur.scrollIntoView({ block: 'nearest' }); }
+  }
+  savePrefs(patch) {
+    var st = Object.assign({}, this.state, patch);
+    try { localStorage.setItem('fdo.prefs', JSON.stringify({ autoOpen: st.autoOpen, afterDone: st.afterDone })); } catch (e) {}
+    this.setState(patch);
+  }
+  // Seleção depois de concluir, conforme a preferência "Depois de concluir"
+  afterComplete(st, id) {
+    if (st.afterDone === 'stay') return { sel: id };
+    if (st.afterDone === 'list') return { sel: id, focusRow: id };
+    return { sel: this.nextOpenId(st, id) };
   }
   paletteResults(st) {
     var q = (st.query || '').trim().toLowerCase(), self = this;
@@ -567,14 +652,14 @@ class Component extends DCLogic {
     var list = this.visible(this.state), idx = -1;
     for (var i = 0; i < list.length; i++) if (list[i].id === this.state.sel) idx = i;
     var n = list[Math.max(0, Math.min(list.length - 1, idx + dir))];
-    if (n) this.setState({ sel: n.id, whyOpen: false, menu: '' });
+    if (n) this.setState({ sel: n.id, whyOpen: false, menu: '', actionOpen: false });
   }
   onKey(e) {
     var st = this.state, t = e.target, mod = e.metaKey || e.ctrlKey, k = e.key;
     var typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
     if (mod && (k === 'k' || k === 'K')) { e.preventDefault(); this.setState({ paletteOpen: !st.paletteOpen, query: '', palIdx: 0, helpOpen: false, menu: '' }); return; }
     if (k === 'Escape') {
-      if (st.paletteOpen || st.helpOpen || st.menu) { e.preventDefault(); this.setState({ paletteOpen: false, helpOpen: false, menu: '' }); }
+      if (st.paletteOpen || st.helpOpen || st.menu || st.prefsOpen) { e.preventDefault(); this.setState({ paletteOpen: false, helpOpen: false, menu: '', prefsOpen: false }); }
       return;
     }
     if (st.paletteOpen) {
@@ -586,6 +671,7 @@ class Component extends DCLogic {
     var v = this.renderVals();
     if (mod && k === 'Enter') {
       if (v.isKato && v.isComposing && v.isReady) { e.preventDefault(); v.send(); }
+      else if (v.act.isMail && v.act.open) { e.preventDefault(); v.sendMail(); }
       return;
     }
     if (typing || mod || e.altKey) return;
@@ -639,6 +725,7 @@ class Component extends DCLogic {
     st.sel = this.firstOpen(st);
     st.whyOpen = false;
     st.menu = '';
+    st.actionOpen = false;
     this.setState(st);
   }
   rewrite(v, tag) {
@@ -733,7 +820,7 @@ class Component extends DCLogic {
         titleFg: done ? '#66737D' : '#333333', deco: done ? 'line-through' : 'none',
         tag: tg.t, tagBg: tg.bg, tagFg: tg.fg, tagFont: tg.mono ? "'Geist Mono', monospace" : 'inherit',
         bg: on ? '#EAF3F9' : '#ffffff', bd: on ? '#0073AD' : '#EAEBEF', current: on ? 'true' : 'false',
-        pick: function () { self.setState({ sel: it.id, whyOpen: false, menu: '' }); }
+        pick: function () { self.setState({ sel: it.id, whyOpen: false, menu: '', actionOpen: false }); }
       });
     });
     if (st.view === 'day' && st.offset === 0 && st.filter === 'todos') listSub += ' · 2 concluídas';
@@ -793,7 +880,7 @@ class Component extends DCLogic {
       regen: function () { self.rewrite(self.state.variant === 0 ? 1 : 0, ''); },
       send: function () { var d = Object.assign({}, self.state.done); d.f1 = true; self.setState({ phase: 'sent', done: d }); },
       undoSend: function () { var d = Object.assign({}, self.state.done); delete d.f1; self.setState({ phase: 'ready', done: d }); },
-      complete: function () { var d = Object.assign({}, self.state.done); d[self.state.sel] = true; var ns = Object.assign({}, self.state, { done: d }); self.setState({ done: d, sel: self.nextOpenId(ns, self.state.sel), whyOpen: false }); },
+      complete: function () { var d = Object.assign({}, self.state.done); d[self.state.sel] = true; var ns = Object.assign({}, self.state, { done: d }); self.setState(Object.assign({ done: d, whyOpen: false, menu: '', actionOpen: false }, self.afterComplete(ns, self.state.sel))); },
       reopen: function () { var d = Object.assign({}, self.state.done); delete d[self.state.sel]; if (self.state.sel === 'f1') self.setState({ done: d, phase: 'ready' }); else self.setState({ done: d }); },
       goNext: function () { self.setState({ sel: self.nextOpenId(self.state, self.state.sel), whyOpen: false }); },
       snoozeOpen: st.menu === 'snooze', skipOpen: st.menu === 'skip', canSnooze: !sDone,
@@ -837,6 +924,40 @@ class Component extends DCLogic {
       shortcuts: [['J / ↓', 'Próxima atividade da lista'], ['K / ↑', 'Atividade anterior'], ['E', 'Concluir e ir para a próxima'], ['S', 'Abrir o menu de adiar'],
         [(this.isMac ? '⌘' : 'Ctrl') + ' + Enter', 'Enviar o rascunho do Mark'], [(this.isMac ? '⌘' : 'Ctrl') + ' + K', 'Buscar atividade por empresa ou contato'], ['?', 'Mostrar esta lista'], ['Esc', 'Fechar menus e janelas']]
         .map(function (x) { return { k: x[0], d: x[1] }; }),
+      act: (function () {
+        var kind = s.id === 'f1' || sDone ? '' : /Ligação/.test(s.ch) ? 'call' : s.ch === 'WhatsApp' ? 'wa' : s.ch === 'E-mail' && self.mailDrafts[s.id] ? 'mail' : '';
+        var phone = self.phones[s.contact] || '', digits = phone.replace(/\D/g, '');
+        var md = self.mailDrafts[s.id] || ['', ''];
+        var wa = st.drafts[s.id] != null ? st.drafts[s.id] : (self.waDrafts[s.id] || '');
+        return {
+          show: !!kind, open: !!kind && (st.autoOpen || st.actionOpen), closed: !!kind && !st.autoOpen && !st.actionOpen,
+          isCall: kind === 'call', isWa: kind === 'wa', isMail: kind === 'mail',
+          label: kind === 'call' ? 'Ligar para ' + s.contact : kind === 'wa' ? 'Mensagem no WhatsApp' : 'Escrever e-mail',
+          contact: s.contact, phone: phone, tel: 'tel:+' + digits, called: !!st.called[s.id], notCalled: !st.called[s.id],
+          script: s.tip, wa: wa, waHref: 'https://wa.me/' + digits + '?text=' + encodeURIComponent(wa),
+          to: s.contact + ' <' + (self.emails[s.contact] || '') + '>',
+          subject: st.drafts[s.id + ':s'] != null ? st.drafts[s.id + ':s'] : md[0],
+          body: st.drafts[s.id] != null ? st.drafts[s.id] : md[1]
+        };
+      })(),
+      openAction: function () { self.setState({ actionOpen: true }); },
+      markCalled: function () { var c = Object.assign({}, self.state.called); c[self.state.sel] = true; self.setState({ called: c }); },
+      onDraft: function (e) { var d = Object.assign({}, self.state.drafts); d[self.state.sel] = e.target.value; self.setState({ drafts: d }); },
+      onDraftSubject: function (e) { var d = Object.assign({}, self.state.drafts); d[self.state.sel + ':s'] = e.target.value; self.setState({ drafts: d }); },
+      copyWa: function () {
+        var txt = self.renderVals().act.wa, id = self.state.sel;
+        try { navigator.clipboard.writeText(txt); } catch (e) {}
+        self.setState({ toast: self.showToast('Mensagem copiada', self.snapshot(id)) });
+      },
+      sentWa: function () { self.finishWith('Mensagem aberta no WhatsApp e registrada no histórico'); },
+      sendMail: function () { var st2 = self.state, it = self.items.filter(function (x) { return x.id === st2.sel; })[0]; self.finishWith('E-mail enviado para ' + it.contact); },
+      prefsOpen: st.prefsOpen, autoOpen: st.autoOpen,
+      afterOpts: [['next', 'Ir para a próxima'], ['stay', 'Ficar na atividade'], ['list', 'Voltar para a lista']].map(function (x) {
+        return { v: x[0], label: x[1], on: st.afterDone === x[0], pick: function () { self.savePrefs({ afterDone: x[0] }); } };
+      }),
+      completeLabel: st.afterDone === 'stay' ? 'Concluir' : st.afterDone === 'list' ? 'Concluir e voltar à lista' : 'Concluir e ir para a próxima',
+      togglePrefs: function () { self.setState({ prefsOpen: !self.state.prefsOpen }); },
+      toggleAutoOpen: function () { self.savePrefs({ autoOpen: !self.state.autoOpen }); },
       whyOpen: st.whyOpen, whyLabel: st.whyOpen ? 'Ocultar' : 'Por quê?', whyExpanded: st.whyOpen ? 'true' : 'false',
       toggleWhy: function () { self.setState({ whyOpen: !self.state.whyOpen }); }
     };
