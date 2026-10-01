@@ -139,6 +139,12 @@ input,textarea{font-family:inherit}
 <span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0;">
 <span style="font-size: 14px; font-weight: 600; color: {{it.titleFg}}; text-decoration: {{it.deco}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{it.title}}</span>
 <span style="font-size: 12px; color: #66737D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{it.typeLabel}} · {{it.ch}} · {{it.company}}</span>
+<sc-if value="{{it.showNba}}" hint-placeholder-val="{{true}}">
+<span style="display: flex; align-items: center; gap: 6px; min-width: 0; margin-top: 2px;">
+<span title="Prioridade {{it.score}}/100" style="font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 99px; flex-shrink: 0; background: {{it.prioBg}}; color: {{it.prioFg}};">{{it.prioLabel}} · {{it.score}}</span>
+<span style="font-size: 12px; color: #8A1CA3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{it.nba}}</span>
+</span>
+</sc-if>
 </span>
 <span style="font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 99px; white-space: nowrap; background: {{it.tagBg}}; color: {{it.tagFg}}; font-family: {{it.tagFont}};">{{it.tag}}</span>
 </button>
@@ -183,6 +189,23 @@ input,textarea{font-family:inherit}
 </div>
 </sc-for>
 </div>
+
+<!-- Next best action -->
+<sc-if value="{{sel.showNba}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 10px; border: 1px solid #E4D3EC; border-radius: 14px; padding: 12px 16px; background: #FCF9FD;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<span style="font-size: 12px; font-weight: 600; color: #8A1CA3; text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0;">Próxima ação</span>
+<span style="font-size: 14px; font-weight: 600; color: #333333; flex-grow: 1; min-width: 0;">{{sel.nba}}</span>
+<span title="Prioridade {{sel.score}}/100" style="font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 99px; flex-shrink: 0; background: {{sel.prioBg}}; color: {{sel.prioFg}};">{{sel.prioLabel}} · {{sel.score}}</span>
+<button type="button" onClick="{{toggleWhy}}" aria-expanded="{{whyExpanded}}" style="height: 30px; padding: 0 10px; border-radius: 8px; background: #ffffff; border: 1px solid #C9A6D8; color: #8A1CA3; font-size: 13px; font-weight: 600; flex-shrink: 0;">{{whyLabel}}</button>
+</div>
+<sc-if value="{{whyOpen}}" hint-placeholder-val="{{false}}">
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; line-height: 1.45; color: #5F5F5F;">
+<sc-for list="{{sel.why}}" as="w" hint-placeholder-count="3"><li>{{w}}</li></sc-for>
+</ul>
+</sc-if>
+</div>
+</sc-if>
 
 <!-- EMAIL FOLLOW-UP WITH MARK -->
 <sc-if value="{{isKato}}" hint-placeholder-val="{{true}}">
@@ -328,7 +351,7 @@ input,textarea{font-family:inherit}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true };
+    this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false };
     this.timer = null;
     function C(k, v) { return { k: k, v: v }; }
     this.items = [
@@ -361,6 +384,36 @@ class Component extends DCLogic {
       { id: 'n6', off: 5, time: '14:00', type: 'ag', ch: 'Demonstração', title: 'Demonstração do Plano Starter', company: 'Farias & Cia Contabilidade', contact: 'Rodrigo Farias', desc: 'Demonstração para os sócios.', tip: 'Confirme os decisores antes: a tarefa de cadastro está atrasada.', ctx: [C('Horário', '14:00 – 15:00'), C('Formato', 'Online'), C('Oportunidade', 'R$ 9.600')] },
       { id: 'n7', off: 5, time: '', type: 'ta', ch: 'Contrato', title: 'Preparar minuta do contrato', company: 'Grupo Vértice', contact: 'Marina Duarte', desc: 'Preparar minuta caso a proposta seja aprovada.', tip: 'Use o modelo com implantação em fases.', ctx: [C('Oportunidade', 'R$ 84.000'), C('Previsão', '30/09'), C('Modelo', 'Implantação em fases')] }
     ];
+    // Prioridade (0–100), próxima melhor ação e sinais usados pelo Mark
+    var PRIO = {
+      l1: [55, 'Confirmar os 2 decisores que o Mark encontrou', ['A demonstração de 28/09 depende deste cadastro', 'Atrasada há 24 dias', 'Oportunidade de R$ 9.600']],
+      l2: [72, 'Ligar entre 8h e 10h: a safra já fechou', ['Oportunidade de R$ 52.000 em negociação', 'Cliente pediu retorno em setembro', 'Sem contato desde 19/08']],
+      l3: [30, 'Enviar junto com o contrato revisado', ['Cliente ativo, com uso diário', 'Contrato revisado também está pendente']],
+      l4: [45, 'Pedir a reemissão com o CNPJ da filial', ['NF 4.812 emitida com o CNPJ da matriz', 'Cliente pediu a filial de Caxias do Sul']],
+      l5: [50, 'Enviar convite para sex, 25/09 às 15h', ['Onboarding parado na etapa 2 de 4', 'Horário livre na sua agenda e na da cliente']],
+      l6: [88, 'Ligar agora: abriu a proposta 3x ontem', ['Proposta aberta 3x ontem', 'Oportunidade de R$ 44.000', 'Dúvidas de preço em aberto']],
+      l7: [76, 'Enviar o contrato v2 explicando a cláusula 7', ['Etapa de contrato: falta só a assinatura', 'Oportunidade de R$ 18.000', 'Atrasada desde ontem']],
+      l8: [40, 'Aplicar o novo valor: R$ 27.000', ['+2 usuários no Plano Pro', 'Forecast desatualizado em R$ 5.400']],
+      f1: [84, 'Enviar o rascunho do Mark: abriu o último e-mail 2x', ['Oportunidade de R$ 38.400', 'Sem resposta há 5 dias', 'Abriu o último e-mail 2x']],
+      t2: [95, 'Levar o cronograma em fases (35 dias)', ['Maior oportunidade do mês: R$ 84.000', 'Etapa de negociação', 'Objeção em aberto: prazo de 60 dias']],
+      t3: [65, 'Confirmar se o gerente de produção vai à visita', ['Visita presencial hoje às 14:00', 'Oportunidade de expansão de R$ 22.000']],
+      t4: [70, 'Responder depois da reunião das 10:30', ['Oportunidade de R$ 84.000', 'Pedido sem resposta desde 21/09', 'Política permite até 8% à vista']],
+      t5: [35, 'Enviar o guia e a trilha de vídeos', ['Onboarding na etapa 2 de 4', '6 usuários ativos']],
+      t6: [68, 'Sair até 13:15 por causa do trânsito', ['Oportunidade de expansão de R$ 22.000', '3 participantes confirmados']],
+      t7: [58, 'Usar o roteiro BANT: abriu a 2ª unidade', ['Lead de indicação', 'Clínica abriu a segunda unidade em agosto']],
+      t8: [38, 'Gravar um áudio para o Mark transcrever', ['Depende da visita das 14:00', 'Notas alimentam a proposta de expansão']],
+      t9: [60, 'Enviar a mensagem pronta no WhatsApp', ['Proposta enviada há 2 dias sem retorno', 'Oportunidade de R$ 29.000']],
+      t10: [42, 'Atualizar Vértice e Kato antes da reunião', ['Forecast de setembro em R$ 196 mil', '2 oportunidades desatualizadas']],
+      t11: [80, 'Ligar antes do horário: lead esperando há 2 h', ['Lead inbound sem resposta há 2 h 10', 'Interesse no Plano Pro', 'Origem: formulário do site']],
+      n1: [55, 'Aguardar a resposta da Beatriz ao follow-up', ['Depende do follow-up de hoje', 'Oportunidade de R$ 38.400']],
+      n2: [62, 'Gerar a partir do modelo "Integração ERP"', ['Oportunidade de R$ 29.000', 'Etapa de proposta']],
+      n3: [33, 'Levar os números: 94% de adesão', ['Cliente desde 10/08', 'Boa adesão abre espaço para expansão']],
+      n4: [45, 'Levar o checklist da etapa 3', ['Onboarding na etapa 3', 'Visita confirmada por WhatsApp']],
+      n5: [50, 'Enviar o case Vita Saúde', ['Oportunidade de R$ 27.000 em proposta', 'Case parecido: duas unidades e agenda integrada']],
+      n6: [52, 'Confirmar os decisores antes da demo', ['Tarefa de cadastro atrasada', 'Oportunidade de R$ 9.600']],
+      n7: [64, 'Usar o modelo com implantação em fases', ['Oportunidade de R$ 84.000', 'Fechamento previsto para 30/09']]
+    };
+    this.items.forEach(function (it) { var p = PRIO[it.id] || [0, '', []]; it.score = p[0]; it.nba = p[1]; it.why = p[2]; });
     this.variants = [
       { subject: 'Próximos passos após a demonstração do Smark', body: 'Olá, Beatriz, tudo bem?\n\nObrigada pelo tempo na demonstração da última sexta (18/09). Anotei dois pontos da nossa conversa: a integração com o ERP que vocês usam hoje e o prazo de implantação para as três unidades.\n\nConversei com nosso time técnico: a integração é feita por API nativa, sem custo adicional no Plano Pro. O prazo estimado de implantação é de 30 dias, com treinamento incluso para a equipe comercial.\n\nFaz sentido reservarmos 30 minutos na quinta (24/09), às 10h, para eu mostrar a integração funcionando e alinharmos o escopo com o Tiago, do TI?\n\nUm abraço,\nAna Souza\nConsultora · Smark CRM' },
       { subject: 'Beatriz, respostas sobre ERP e prazo de implantação', body: 'Oi, Beatriz!\n\nPassando para responder os dois pontos que ficaram em aberto na demonstração de sexta:\n\n• Integração com ERP: nativa, via API, já inclusa no Plano Pro.\n• Implantação: cerca de 30 dias para as três unidades, com treinamento.\n\nSe fizer sentido, reservo 30 min na quinta (24/09), às 10h, para mostrar a integração ao vivo para você e o Tiago. Funciona?\n\nAbraços,\nAna' },
@@ -408,6 +461,7 @@ class Component extends DCLogic {
   go(patch) {
     var st = Object.assign({}, this.state, patch);
     st.sel = this.firstOpen(st);
+    st.whyOpen = false;
     this.setState(st);
   }
   rewrite(v, tag) {
@@ -431,6 +485,11 @@ class Component extends DCLogic {
       b4: { label: 'Próximos 5 dias', range: '24/09 – 28/09', bar: '#3F9A47', fg: '#256A29', tint: '#EDF6EE' }
     };
     function isOpen(it) { return !st.done[it.id]; }
+    function prioOf(score) {
+      if (score >= 70) return { label: 'Alta', bg: '#FDEBD8', fg: '#9A4F07' };
+      if (score >= 40) return { label: 'Média', bg: '#EEF1F4', fg: '#4A5561' };
+      return { label: 'Baixa', bg: '#F5F5F5', fg: '#66737D' };
+    }
     function tagFor(it) {
       if (st.done[it.id]) return { t: 'Feita', bg: '#E3F1E4', fg: '#256A29', mono: false };
       if (it.off <= -14) return { t: 'Há ' + (-it.off) + ' dias', bg: '#A24037', fg: '#ffffff', mono: false };
@@ -487,15 +546,16 @@ class Component extends DCLogic {
     listSub = openCount + (openCount === 1 ? ' pendente' : ' pendentes');
     vis.forEach(function (it) {
       if (!byOff[it.off]) { var dd = self.dateOf(it.off); byOff[it.off] = { label: self.rel(it.off), sub: dd.wd + ', ' + dd.dm, fg: it.off < 0 ? '#A24037' : it.off === 0 ? '#005A87' : '#5F5F5F', items: [] }; groups.push(byOff[it.off]); }
-      var done = !!st.done[it.id], on = st.sel === it.id, ty = TYPE[it.type], tg = tagFor(it);
+      var done = !!st.done[it.id], on = st.sel === it.id, ty = TYPE[it.type], tg = tagFor(it), pr = prioOf(it.score);
       byOff[it.off].items.push({
-        title: it.title, company: it.company, ch: it.ch, typeLabel: ty.label,
+        id: it.id, title: it.title, company: it.company, ch: it.ch, typeLabel: ty.label,
+        showNba: !done && !!it.nba, nba: it.nba, prioLabel: pr.label, prioBg: pr.bg, prioFg: pr.fg, score: it.score,
         tileBg: done ? '#E3F1E4' : ty.bg, tileFg: done ? '#256A29' : ty.fg,
         showDone: done, showFu: !done && it.type === 'fu', showAg: !done && it.type === 'ag', showTa: !done && it.type === 'ta',
         titleFg: done ? '#66737D' : '#333333', deco: done ? 'line-through' : 'none',
         tag: tg.t, tagBg: tg.bg, tagFg: tg.fg, tagFont: tg.mono ? "'Geist Mono', monospace" : 'inherit',
         bg: on ? '#EAF3F9' : '#ffffff', bd: on ? '#0073AD' : '#EAEBEF', current: on ? 'true' : 'false',
-        pick: function () { self.setState({ sel: it.id }); }
+        pick: function () { self.setState({ sel: it.id, whyOpen: false }); }
       });
     });
     if (st.view === 'day' && st.offset === 0 && st.filter === 'todos') listSub += ' · 2 concluídas';
@@ -507,7 +567,9 @@ class Component extends DCLogic {
     else if (s.off < 0) { status = 'Atrasada há ' + (-s.off) + (s.off === -1 ? ' dia' : ' dias'); sBg = s.off <= -14 ? '#A24037' : '#F6E3E1'; sFg = s.off <= -14 ? '#ffffff' : '#A24037'; }
     else if (s.off === 0) { status = 'Hoje' + (s.time ? ' · ' + s.time : ''); sBg = '#DAEAF4'; sFg = '#005A87'; }
     else { status = sd.wd + ', ' + sd.dm + (s.time ? ' · ' + s.time : ''); sBg = '#EDF6EE'; sFg = '#256A29'; }
+    var sPr = prioOf(s.score);
     var sel = {
+      showNba: !sDone && !!s.nba, nba: s.nba, why: s.why, score: s.score, prioLabel: sPr.label, prioBg: sPr.bg, prioFg: sPr.fg,
       title: s.title, company: s.company, contact: s.contact, ch: s.ch, typeLabel: TYPE[s.type].label,
       tileBg: TYPE[s.type].bg, tileFg: TYPE[s.type].fg, status: status, statusBg: sBg, statusFg: sFg,
       desc: s.desc, tip: s.tip, ctx: s.ctx, isDone: sDone, canComplete: !sDone && s.id !== 'f1'
@@ -552,9 +614,11 @@ class Component extends DCLogic {
       regen: function () { self.rewrite(self.state.variant === 0 ? 1 : 0, ''); },
       send: function () { var d = Object.assign({}, self.state.done); d.f1 = true; self.setState({ phase: 'sent', done: d }); },
       undoSend: function () { var d = Object.assign({}, self.state.done); delete d.f1; self.setState({ phase: 'ready', done: d }); },
-      complete: function () { var d = Object.assign({}, self.state.done); d[self.state.sel] = true; var ns = Object.assign({}, self.state, { done: d }); self.setState({ done: d, sel: self.nextOpenId(ns, self.state.sel) }); },
+      complete: function () { var d = Object.assign({}, self.state.done); d[self.state.sel] = true; var ns = Object.assign({}, self.state, { done: d }); self.setState({ done: d, sel: self.nextOpenId(ns, self.state.sel), whyOpen: false }); },
       reopen: function () { var d = Object.assign({}, self.state.done); delete d[self.state.sel]; if (self.state.sel === 'f1') self.setState({ done: d, phase: 'ready' }); else self.setState({ done: d }); },
-      goNext: function () { self.setState({ sel: self.nextOpenId(self.state, self.state.sel) }); }
+      goNext: function () { self.setState({ sel: self.nextOpenId(self.state, self.state.sel), whyOpen: false }); },
+      whyOpen: st.whyOpen, whyLabel: st.whyOpen ? 'Ocultar' : 'Por quê?', whyExpanded: st.whyOpen ? 'true' : 'false',
+      toggleWhy: function () { self.setState({ whyOpen: !self.state.whyOpen }); }
     };
   }
 }
