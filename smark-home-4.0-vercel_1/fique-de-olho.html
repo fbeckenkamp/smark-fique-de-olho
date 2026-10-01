@@ -447,8 +447,10 @@ input,textarea{font-family:inherit}
 </div>
 </div>
 <label style="display: flex; flex-direction: column; gap: 6px;">
-<span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Registrar resultado</span>
-<textarea placeholder="O que aconteceu? Ex.: cliente pediu retorno na próxima semana." style="width: 100%; height: 120px; box-sizing: border-box; border: 1px solid #DDDDDD; border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; resize: none; outline: none; color: #333333;"></textarea>
+<span style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em; flex-grow: 1;">Registrar resultado</span>
+<sc-if value="{{notTranscribing}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{recordAudio}}" style="height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid #C9A6D8; background: #ffffff; color: #8A1CA3; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Gravar áudio</button></sc-if>
+<sc-if value="{{transcribing}}" hint-placeholder-val="{{false}}"><span class="sk" style="font-size: 12px; font-weight: 600; color: #8A1CA3;">Mark está transcrevendo…</span></sc-if></span>
+<textarea placeholder="O que aconteceu? Ex.: cliente pediu retorno na próxima semana." value="{{note}}" onChange="{{onNote}}" style="width: 100%; height: 120px; box-sizing: border-box; border: 1px solid #DDDDDD; border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.5; resize: none; outline: none; color: #333333;"></textarea>
 </label>
 <sc-if value="{{skipOpen}}" hint-placeholder-val="{{false}}">
 <div role="group" aria-label="Motivo para pular" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
@@ -458,10 +460,36 @@ input,textarea{font-family:inherit}
 </sc-for>
 </div>
 </sc-if>
+<sc-if value="{{post}}" hint-placeholder-val="{{false}}">
+<div role="region" aria-label="Mark sugere atualizar o CRM" style="border: 1px solid #E4D3EC; background: #FCF9FD; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-size: 15px; font-weight: 600; color: #333333;"><span style="color: #8A1CA3;">Mark</span> sugere atualizar o CRM com base no resultado</span>
+<sc-for list="{{post.rows}}" as="r" hint-placeholder-count="2">
+<label style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #333333; background: #ffffff; border: 1px solid #EAEBEF; border-radius: 10px; padding: 8px 12px;">
+<input type="checkbox" checked="{{r.on}}" onChange="{{r.toggle}}">
+<span style="width: 150px; flex-shrink: 0; color: #66737D;">{{r.k}}</span>
+<span style="color: #A24037; text-decoration: line-through;">{{r.from}}</span><span aria-hidden="true" style="color: #66737D;">→</span><span style="color: #256A29; font-weight: 600;">{{r.to}}</span>
+</label>
+</sc-for>
+<sc-if value="{{post.hasNext}}" hint-placeholder-val="{{false}}">
+<label style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #333333; background: #ffffff; border: 1px solid #EAEBEF; border-radius: 10px; padding: 8px 12px;">
+<input type="checkbox" checked="{{post.nextOn}}" onChange="{{post.toggleNext}}">
+<span style="width: 150px; flex-shrink: 0; color: #66737D;">Próxima atividade</span>
+<span style="font-weight: 600;">{{post.next.title}}</span><span style="color: #66737D;">· {{post.next.ch}} · {{post.next.when}}</span>
+</label>
+</sc-if>
+<div style="display: flex; gap: 8px; justify-content: flex-end;">
+<button type="button" onClick="{{post.cancel}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Voltar</button>
+<button type="button" onClick="{{post.plain}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #ffffff; border: 1px solid #D4D4D4; color: #333333;">Concluir sem alterar</button>
+<button type="button" onClick="{{post.apply}}" style="height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; background: #8A1CA3; border: 0; color: #ffffff;">Aplicar e concluir</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{noPost}}" hint-placeholder-val="{{true}}">
 <div style="display: flex; gap: 10px; justify-content: flex-end;">
 <button type="button" onClick="{{toggleSkip}}" aria-expanded="{{skipOpen}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; font-size: 14px; font-weight: 600;">Pular</button>
 <button type="button" onClick="{{complete}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: {{accent}}; color: #ffffff; border: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px;">{{completeLabel}} <kbd style="font-family: 'Geist Mono', monospace; font-size: 11px; font-weight: 500; padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.45); color: #ffffff;">E</kbd></button>
 </div>
+</sc-if>
 </div>
 </sc-if>
 
@@ -579,7 +607,7 @@ class Component extends DCLogic {
     super(props);
     this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false, menu: '', discarded: {}, skips: {}, toast: null, pickDate: '2026-09-24', pickTime: '09:00', paletteOpen: false, query: '', palIdx: 0, helpOpen: false, autoOpen: true, afterDone: 'next', prefsOpen: false, actionOpen: false, drafts: {}, called: {}, focusRow: '',
       drawer: '', rejected: {}, autonomy: { email: 'rascunhar', wa: 'rascunhar', agenda: 'aprovar', crm: 'aprovar' },
-      guard: { hours: true, bigDeal: true, digest: true, limit: 20 }, autoCount: 0, waVar: {}, waGen: false, waSent: {},
+      guard: { hours: true, bigDeal: true, digest: true, limit: 20 }, autoCount: 0, waVar: {}, waGen: false, waSent: {}, notes: {}, post: null, transcribing: false,
       log: [{ at: '09:20', text: 'Registrou a confirmação da visita técnica por WhatsApp (Café Brasil)', auto: true }, { at: '08:42', text: 'Registrou a ligação com Luciana Prado no histórico (Nexa Logística)', auto: true }] };
     try { var au = JSON.parse(localStorage.getItem('fdo.autonomy') || 'null'); if (au && au.autonomy) { this.state.autonomy = Object.assign(this.state.autonomy, au.autonomy); this.state.guard = Object.assign(this.state.guard, au.guard || {}); } } catch (e) {}
     try { var pf = JSON.parse(localStorage.getItem('fdo.prefs') || '{}'); if (typeof pf.autoOpen === 'boolean') this.state.autoOpen = pf.autoOpen; if (/^(next|stay|list)$/.test(pf.afterDone)) this.state.afterDone = pf.afterDone; } catch (e) {}
@@ -655,6 +683,22 @@ class Component extends DCLogic {
       t5: 'Oi, Mônica! Como combinado, seguem o guia de primeiros passos do Smark e o link da trilha de treinamentos gravados. Qualquer dúvida da equipe, me chama por aqui. Na sexta levo o checklist da etapa 3.',
       t9: 'Oi, Carlos! Conseguiu ver a proposta que enviei? Posso tirar alguma dúvida hoje?'
     };
+    // Agente pós-atividade: mudanças propostas nos campos [campo, novo valor] e próxima atividade [título, canal, dias, horário]
+    this.postPlan = {
+      l2: [[['Etapa', 'Negociação'], ['Fechamento previsto', '31/10']], ['Enviar proposta atualizada', 'E-mail', 2, '']],
+      l6: [[['Etapa', 'Proposta'], ['Sinal', 'Dúvida de preço respondida']], ['Follow-up da proposta', 'Ligação', 5, '10:00']],
+      t2: [[['Etapa', 'Contrato'], ['Fechamento previsto', '30/09']], ['Enviar minuta do contrato', 'E-mail', 1, '']],
+      t3: [[['Pauta', 'Diagnóstico + módulo de pedidos']], null],
+      t6: [[['Etapa', 'Proposta'], ['Oportunidade', 'Expansão · R$ 28.000']], ['Preparar proposta de expansão', 'Proposta', 2, '']],
+      t7: [[['Interesse', 'Plano Pro · 2 unidades']], null],
+      t8: [[['Etapa', 'Proposta'], ['Oportunidade', 'Expansão · R$ 31.000'], ['Fechamento previsto', '15/10']], ['Enviar proposta de expansão', 'E-mail', 2, '']],
+      t11: [[['Interesse', 'Plano Pro · 8 usuários']], ['Agendar demonstração', 'Reunião', 1, '10:00']]
+    };
+    this.transcripts = {
+      t8: 'Visita muito boa. Participaram o Rafael, o gerente de produção e o financeiro. Querem o módulo de pedidos para 12 vendedores externos, o que aumenta a expansão para cerca de R$ 31 mil. Pediram a proposta até sexta e querem fechar até meados de outubro.',
+      t6: 'Diagnóstico feito com o Rafael e o gerente de produção. O maior gargalo é o pedido feito em papel pelos vendedores externos. Vão avaliar a expansão para mais usuários.'
+    };
+    this.newId = 0;
     // Variações de tom do Mark para WhatsApp
     this.waVariants = {
       t5: { curto: 'Oi, Mônica! Seguem o guia de primeiros passos e o link dos treinamentos. Qualquer dúvida, me chama.', formal: 'Olá, Mônica. Conforme combinado, envio o guia de primeiros passos do Smark e o acesso à trilha de treinamentos gravados. Fico à disposição para dúvidas da equipe.', direto: 'Mônica, guia e treinamentos: [link]. Sexta levo o checklist da etapa 3.' },
@@ -751,6 +795,40 @@ class Component extends DCLogic {
     this.setState({ waGen: true, drafts: d });
     this.timer = setTimeout(function () { var v = Object.assign({}, self.state.waVar); v[id] = key; self.setState({ waGen: false, waVar: v }); }, 800);
   }
+  // Monta a proposta do Mark para o CRM a partir do plano da atividade (ou um plano padrão)
+  buildPost(it) {
+    var plan = this.postPlan[it.id] || [[], ['Follow-up: ' + it.title.toLowerCase(), it.ch, 5, '']];
+    var rows = plan[0].map(function (f) {
+      var cur = it.ctx.filter(function (c) { return c.k === f[0]; })[0];
+      return { k: f[0], from: cur ? cur.v : '—', to: f[1], on: true };
+    });
+    var n = plan[1], nd = n ? this.dateOf(n[2]) : null;
+    return { id: it.id, rows: rows, next: n ? { title: n[0], ch: n[1], off: n[2], time: n[3], when: nd.wd + ', ' + nd.dm + (n[3] ? ' · ' + n[3] : ''), on: true } : null };
+  }
+  applyPost(post, auto) {
+    var st = this.state, id = post.id, it = this.items.filter(function (x) { return x.id === id; })[0], self = this;
+    var snap = this.snapshot(id), ctxBefore = it.ctx.slice(), created = null, changed = [];
+    post.rows.forEach(function (r) {
+      if (!r.on) return;
+      var found = false;
+      it.ctx = it.ctx.map(function (c) { if (c.k === r.k) { found = true; return { k: c.k, v: r.to }; } return c; });
+      if (!found) it.ctx = it.ctx.concat([{ k: r.k, v: r.to }]);
+      changed.push(r.k + ': ' + r.to);
+    });
+    if (post.next && post.next.on) {
+      created = 'x' + (++this.newId);
+      this.items.push({ id: created, off: post.next.off, time: post.next.time, type: 'fu', ch: post.next.ch, title: post.next.title, company: it.company, contact: it.contact,
+        desc: 'Criada pelo Mark depois de: ' + it.title.toLowerCase() + '.', tip: 'Criada a partir do resultado registrado em 23/09.', ctx: it.ctx.slice(), score: 60, nba: post.next.title, why: ['Próximo passo do resultado registrado'], deal: it.deal, ev: it.ev });
+      changed.push('próxima atividade "' + post.next.title + '"');
+    }
+    var done = Object.assign({}, st.done); done[id] = true;
+    var ns = Object.assign({}, st, { done: done });
+    var entry = changed.length ? { at: '10:' + ('0' + (10 + st.log.length)).slice(-2), text: 'Atualizou ' + it.company + ': ' + changed.join('; '), auto: !!auto } : null;
+    var log = entry ? [entry].concat(st.log) : st.log;
+    snap.post = { ctx: ctxBefore, created: created, entry: entry };
+    this.setState(Object.assign({ done: done, post: null, log: log, menu: '', whyOpen: false, actionOpen: false,
+      toast: this.showToast(changed.length ? 'CRM atualizado: ' + changed.length + (changed.length === 1 ? ' mudança' : ' mudanças') : 'Atividade concluída', snap) }, this.afterComplete(ns, id)));
+  }
   finishWith(text) {
     var st = this.state, id = st.sel, snap = this.snapshot(id), d = Object.assign({}, st.done); d[id] = true;
     var ns = Object.assign({}, st, { done: d });
@@ -810,12 +888,14 @@ class Component extends DCLogic {
     var sn = t.snap, it = this.items.filter(function (x) { return x.id === sn.id; })[0], st = this.state;
     var done = Object.assign({}, st.done), dis = Object.assign({}, st.discarded), sk = Object.assign({}, st.skips);
     it.off = sn.off; it.time = sn.time;
+    var log = st.log;
+    if (sn.post) { it.ctx = sn.post.ctx; if (sn.post.created) this.items = this.items.filter(function (x) { return x.id !== sn.post.created; }); log = log.filter(function (e) { return e !== sn.post.entry; }); }
     if (sn.done) done[sn.id] = true; else delete done[sn.id];
     if (sn.discarded) dis[sn.id] = true; else delete dis[sn.id];
     if (sn.skip) sk[sn.id] = sn.skip; else delete sk[sn.id];
     if (this.toastTimer) clearTimeout(this.toastTimer);
     var ws = Object.assign({}, st.waSent); if (it && ws[it.contact] && /WhatsApp enviado/.test(t.text)) ws[it.contact] = ws[it.contact].slice(0, -1);
-    this.setState({ done: done, discarded: dis, skips: sk, sel: sn.id, toast: null, menu: '', waSent: ws });
+    this.setState({ done: done, discarded: dis, skips: sk, sel: sn.id, toast: null, menu: '', waSent: ws, log: log });
   }
   componentDidMount() { document.addEventListener('keydown', this.onKey); }
   componentWillUnmount() { document.removeEventListener('keydown', this.onKey); if (this.timer) clearTimeout(this.timer); if (this.toastTimer) clearTimeout(this.toastTimer); }
@@ -935,6 +1015,7 @@ class Component extends DCLogic {
     st.whyOpen = false;
     st.menu = '';
     st.actionOpen = false;
+    st.post = null;
     this.setState(st);
   }
   rewrite(v, tag) {
@@ -1040,7 +1121,7 @@ class Component extends DCLogic {
         titleFg: done ? '#66737D' : '#333333', deco: done ? 'line-through' : 'none',
         tag: tg.t, tagBg: tg.bg, tagFg: tg.fg, tagFont: tg.mono ? "'Geist Mono', monospace" : 'inherit',
         bg: on ? '#EAF3F9' : '#ffffff', bd: on ? '#0073AD' : '#EAEBEF', current: on ? 'true' : 'false',
-        pick: function () { self.setState({ sel: it.id, whyOpen: false, menu: '', actionOpen: false }); }
+        pick: function () { self.setState({ sel: it.id, whyOpen: false, menu: '', actionOpen: false, post: null }); }
       });
     });
     var doneCount = vis.filter(function (it) { return !isOpen(it); }).length;
@@ -1107,7 +1188,16 @@ class Component extends DCLogic {
       regen: function () { self.rewrite(self.state.variant === 0 ? 1 : 0, ''); },
       send: function () { var d = Object.assign({}, self.state.done); d.f1 = true; self.setState({ phase: 'sent', done: d }); },
       undoSend: function () { var d = Object.assign({}, self.state.done); delete d.f1; self.setState({ phase: 'ready', done: d }); },
-      complete: function () { var d = Object.assign({}, self.state.done); d[self.state.sel] = true; var ns = Object.assign({}, self.state, { done: d }); self.setState(Object.assign({ done: d, whyOpen: false, menu: '', actionOpen: false }, self.afterComplete(ns, self.state.sel))); },
+      complete: function () {
+        var st2 = self.state, cur = self.items.filter(function (x) { return x.id === st2.sel; })[0];
+        if ((st2.notes[st2.sel] || '').trim() && cur.id !== 'f1') {
+          var post = self.buildPost(cur);
+          if (st2.autonomy.crm === 'sozinho') { self.applyPost(post, true); return; }
+          self.setState({ post: post }); return;
+        }
+        self.completePlain();
+      },
+      completePlain: function () { var d = Object.assign({}, self.state.done); d[self.state.sel] = true; var ns = Object.assign({}, self.state, { done: d }); self.setState(Object.assign({ done: d, whyOpen: false, menu: '', actionOpen: false }, self.afterComplete(ns, self.state.sel))); },
       reopen: function () { var d = Object.assign({}, self.state.done); delete d[self.state.sel]; if (self.state.sel === 'f1') self.setState({ done: d, phase: 'ready' }); else self.setState({ done: d }); },
       goNext: function () { self.setState({ sel: self.nextOpenId(self.state, self.state.sel), whyOpen: false }); },
       snoozeOpen: st.menu === 'snooze', skipOpen: st.menu === 'skip', canSnooze: !sDone,
@@ -1251,6 +1341,27 @@ class Component extends DCLogic {
         if (!p || sDone || s.off > 0 || st.rejected[s.id] || !self.needsApproval(st, s)) return null;
         return { what: p[1], approve: function () { self.approve(s.id); } };
       })(),
+      note: st.notes[s.id] || '',
+      onNote: function (e) { var n = Object.assign({}, self.state.notes); n[self.state.sel] = e.target.value; self.setState({ notes: n }); },
+      transcribing: st.transcribing, notTranscribing: !st.transcribing,
+      recordAudio: function () {
+        var id = self.state.sel, it = self.items.filter(function (x) { return x.id === id; })[0];
+        self.setState({ transcribing: true });
+        setTimeout(function () {
+          var n = Object.assign({}, self.state.notes);
+          n[id] = self.transcripts[id] || ('Falei com ' + it.contact + '. ' + it.desc + ' Combinamos um novo contato nos próximos dias.');
+          self.setState({ notes: n, transcribing: false });
+        }, 1200);
+      },
+      post: st.post && st.post.id === s.id ? {
+        rows: st.post.rows.map(function (r, i) { return { k: r.k, from: r.from, to: r.to, on: r.on, toggle: function () { var p2 = JSON.parse(JSON.stringify(self.state.post)); p2.rows[i].on = !p2.rows[i].on; self.setState({ post: p2 }); } }; }),
+        next: st.post.next, hasNext: !!st.post.next, nextOn: st.post.next ? st.post.next.on : false,
+        toggleNext: function () { var p2 = JSON.parse(JSON.stringify(self.state.post)); p2.next.on = !p2.next.on; self.setState({ post: p2 }); },
+        apply: function () { self.applyPost(self.state.post, false); },
+        plain: function () { self.setState({ post: null }); self.renderVals().completePlain(); },
+        cancel: function () { self.setState({ post: null }); }
+      } : null,
+      noPost: !(st.post && st.post.id === s.id),
       whyOpen: st.whyOpen, whyLabel: st.whyOpen ? 'Ocultar' : 'Por quê?', whyExpanded: st.whyOpen ? 'true' : 'false',
       toggleWhy: function () { self.setState({ whyOpen: !self.state.whyOpen }); }
     };
