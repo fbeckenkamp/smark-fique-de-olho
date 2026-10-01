@@ -19,7 +19,7 @@ input,textarea{font-family:inherit}
 .sk{animation:fdoPulse 1.1s ease-in-out infinite}
 </style>
 </helmet>
-<div style="width: 1440px; height: 1500px; display: grid; grid-template-columns: 240px minmax(0, 1fr); background: #EEEEEE; font-family: 'Geist', system-ui, sans-serif; color: #333333;">
+<div style="width: 1440px; min-height: 1500px; display: grid; grid-template-columns: 240px minmax(0, 1fr); background: #EEEEEE; font-family: 'Geist', system-ui, sans-serif; color: #333333;">
 
 <!-- SIDEBAR -->
 <nav aria-label="Principal" style="background: #0073AD; color: #E6F2F9; display: flex; flex-direction: column; padding: 24px 16px; gap: 28px;">
@@ -89,6 +89,16 @@ input,textarea{font-family:inherit}
 <button type="button" onClick="{{goToday}}" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #EEEEEE; border: 1px solid #D4D4D4; color: #333333; font-size: 14px; font-weight: 600;">Hoje</button>
 </div>
 </div>
+
+<!-- Upcoming meeting banner -->
+<sc-if value="{{banner}}" hint-placeholder-val="{{false}}">
+<div role="status" aria-label="Próxima reunião" style="display: flex; align-items: center; gap: 12px; background: #FCF9FD; border: 1px solid #E4D3EC; border-radius: 14px; padding: 10px 12px 10px 16px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A1CA3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>
+<span style="font-size: 14px; color: #333333; flex-grow: 1;"><b>{{banner.text}}</b> · o Mark preparou o briefing.</span>
+<button type="button" onClick="{{banner.open}}" style="height: 34px; padding: 0 12px; border-radius: 8px; background: #8A1CA3; border: 0; color: #ffffff; font-size: 13px; font-weight: 600;">Ver briefing</button>
+<button type="button" onClick="{{dismissBanner}}" aria-label="Dispensar aviso" style="width: 34px; height: 34px; border-radius: 8px; background: transparent; border: 0; color: #66737D; font-size: 16px;">×</button>
+</div>
+</sc-if>
 
 <!-- Totalizer bar -->
 <section aria-label="Totalizadores" style="background: #ffffff; border: 1px solid #DDDDDD; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column;">
@@ -255,6 +265,29 @@ input,textarea{font-family:inherit}
 <span style="font-size: 13px; color: #333333; flex-grow: 1;"><b style="color: #8A1CA3;">Mark preparou:</b> {{selPrep.what}}</span>
 <button type="button" onClick="{{selPrep.approve}}" style="height: 30px; padding: 0 12px; border-radius: 8px; background: #8A1CA3; border: 0; color: #ffffff; font-size: 13px; font-weight: 600; flex-shrink: 0;">Aprovar</button>
 </div>
+</sc-if>
+</div>
+</sc-if>
+
+<!-- Meeting briefing -->
+<sc-if value="{{brief}}" hint-placeholder-val="{{false}}">
+<div role="region" aria-label="Briefing do Mark" style="border: 1px solid #DDDDDD; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; align-items: center; gap: 10px;">
+<span style="font-size: 15px; font-weight: 600; color: #333333; flex-grow: 1;">Briefing do <span style="color: #8A1CA3;">Mark</span></span>
+<span style="font-size: 12px; color: #66737D;">{{brief.logistics}}</span>
+<button type="button" onClick="{{toggleBrief}}" aria-expanded="{{briefOpen}}" style="height: 30px; padding: 0 10px; border-radius: 8px; background: #ffffff; border: 1px solid #D4D4D4; color: #333333; font-size: 13px; font-weight: 600;">{{briefLabel}}</button>
+</div>
+<sc-if value="{{briefOpen}}" hint-placeholder-val="{{true}}">
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px;">
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Participantes</span><ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; font-size: 13px; line-height: 1.45; color: #333333;"><sc-for list="{{brief.people}}" as="x" hint-placeholder-count="2"><li>{{x}}</li></sc-for></ul></div>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Histórico</span><ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; font-size: 13px; line-height: 1.45; color: #333333;"><sc-for list="{{brief.history}}" as="x" hint-placeholder-count="2"><li>{{x}}</li></sc-for></ul></div>
+<div style="display: flex; flex-direction: column; gap: 4px; grid-column: 1 / -1; background: #F5F9FC; border-radius: 10px; padding: 10px 12px;"><span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Objetivo</span><span style="font-size: 14px; font-weight: 600; color: #333333;">{{brief.goal}}</span></div>
+<sc-if value="{{brief.hasObj}}" hint-placeholder-val="{{true}}"><div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Objeções em aberto</span><ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; font-size: 13px; line-height: 1.45; color: #333333;"><sc-for list="{{brief.objections}}" as="x" hint-placeholder-count="2"><li>{{x}}</li></sc-for></ul></div></sc-if>
+<sc-if value="{{brief.hasQ}}" hint-placeholder-val="{{true}}"><div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Perguntas sugeridas</span><ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; font-size: 13px; line-height: 1.45; color: #333333;"><sc-for list="{{brief.questions}}" as="x" hint-placeholder-count="2"><li>{{x}}</li></sc-for></ul></div></sc-if>
+<sc-if value="{{brief.hasMat}}" hint-placeholder-val="{{true}}"><div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Materiais</span><ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; font-size: 13px; line-height: 1.45; color: #333333;"><sc-for list="{{brief.materials}}" as="x" hint-placeholder-count="2"><li>{{x}}</li></sc-for></ul></div></sc-if>
+<sc-if value="{{brief.hasNews}}" hint-placeholder-val="{{false}}"><div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-size: 12px; font-weight: 600; color: #66737D; text-transform: uppercase; letter-spacing: 0.06em;">Na empresa</span><span style="font-size: 13px; line-height: 1.45; color: #333333;">{{brief.news}}</span></div></sc-if>
+</div>
+<sc-if value="{{brief.generic}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: #66737D;">Briefing montado com os dados da oportunidade. O Mark completa participantes e perguntas 30 min antes do horário.</span></sc-if>
 </sc-if>
 </div>
 </sc-if>
@@ -607,7 +640,7 @@ class Component extends DCLogic {
     super(props);
     this.state = { view: 'day', offset: 0, range: '', sel: 'f1', done: { t0: true, t1: true }, filter: 'todos', variant: 0, revTag: '', phase: 'ready', subject: null, body: null, instr: '', followNext: true, whyOpen: false, menu: '', discarded: {}, skips: {}, toast: null, pickDate: '2026-09-24', pickTime: '09:00', paletteOpen: false, query: '', palIdx: 0, helpOpen: false, autoOpen: true, afterDone: 'next', prefsOpen: false, actionOpen: false, drafts: {}, called: {}, focusRow: '',
       drawer: '', rejected: {}, autonomy: { email: 'rascunhar', wa: 'rascunhar', agenda: 'aprovar', crm: 'aprovar' },
-      guard: { hours: true, bigDeal: true, digest: true, limit: 20 }, autoCount: 0, waVar: {}, waGen: false, waSent: {}, notes: {}, post: null, transcribing: false,
+      guard: { hours: true, bigDeal: true, digest: true, limit: 20 }, autoCount: 0, waVar: {}, waGen: false, waSent: {}, notes: {}, post: null, transcribing: false, briefOpen: true, bannerOff: false,
       log: [{ at: '09:20', text: 'Registrou a confirmação da visita técnica por WhatsApp (Café Brasil)', auto: true }, { at: '08:42', text: 'Registrou a ligação com Luciana Prado no histórico (Nexa Logística)', auto: true }] };
     try { var au = JSON.parse(localStorage.getItem('fdo.autonomy') || 'null'); if (au && au.autonomy) { this.state.autonomy = Object.assign(this.state.autonomy, au.autonomy); this.state.guard = Object.assign(this.state.guard, au.guard || {}); } } catch (e) {}
     try { var pf = JSON.parse(localStorage.getItem('fdo.prefs') || '{}'); if (typeof pf.autoOpen === 'boolean') this.state.autoOpen = pf.autoOpen; if (/^(next|stay|list)$/.test(pf.afterDone)) this.state.afterDone = pf.afterDone; } catch (e) {}
@@ -699,6 +732,22 @@ class Component extends DCLogic {
       t6: 'Diagnóstico feito com o Rafael e o gerente de produção. O maior gargalo é o pedido feito em papel pelos vendedores externos. Vão avaliar a expansão para mais usuários.'
     };
     this.newId = 0;
+    // Briefings do Mark para reuniões e visitas
+    this.briefs = {
+      t2: { people: ['Marina Duarte · Diretora de Operações (decisora)', 'Paulo Teixeira · Financeiro (pediu desconto à vista)'],
+        history: ['Demonstração em 02/09 com 4 pessoas', 'Proposta v3 enviada em 16/09 (R$ 84.000)', 'Paulo pediu condições à vista em 21/09'],
+        objections: ['Prazo de implantação de 60 dias (querem até 45)'], goal: 'Aprovar a proposta v3 e combinar a assinatura até 30/09.',
+        questions: ['O cronograma em fases (35 dias) resolve o prazo?', 'Quem mais precisa aprovar além da Marina?', 'O desconto de 8% à vista viabiliza fechar este mês?'],
+        materials: ['Proposta_Vertice_v3.pdf', 'Cronograma de implantação em fases'], logistics: 'Online · Google Meet · 10:30 – 11:15', news: 'O site do Grupo Vértice anunciou uma nova unidade em Curitiba (15/09).' },
+      t6: { people: ['Rafael Lima · Coordenador comercial', 'Gerente de produção · principal usuário do módulo de pedidos', 'Financeiro · a confirmar'],
+        history: ['Cliente desde agosto (Plano Pro, R$ 61.200)', 'NF de implantação com CNPJ errado, ainda pendente'],
+        objections: ['Pedido em papel dos vendedores externos'], goal: 'Mapear o processo de pedidos e dimensionar a expansão.',
+        questions: ['Quantos vendedores externos fazem pedidos?', 'Qual ERP recebe os pedidos hoje?', 'Quem aprova a expansão?'],
+        materials: ['Checklist de diagnóstico', 'Demo do módulo de pedidos no celular'], logistics: 'Presencial · Caxias do Sul · saia até 13:15 (trânsito na BR-116)', news: '' },
+      t7: { people: ['Dr. Henrique Alves · Sócio-diretor'], history: ['Indicação da rede Vita Saúde', 'Abriu a segunda unidade em agosto'],
+        objections: [], goal: 'Qualificar pelo BANT e agendar uma demonstração.', questions: ['Qual o orçamento para sistemas este ano?', 'Quem decide junto com o senhor?', 'Qual o prazo para integrar as duas agendas?'],
+        materials: ['Case Vita Saúde'], logistics: 'Ligação · 15:30 – 16:00', news: '' }
+    };
     // Variações de tom do Mark para WhatsApp
     this.waVariants = {
       t5: { curto: 'Oi, Mônica! Seguem o guia de primeiros passos e o link dos treinamentos. Qualquer dúvida, me chama.', formal: 'Olá, Mônica. Conforme combinado, envio o guia de primeiros passos do Smark e o acesso à trilha de treinamentos gravados. Fico à disposição para dúvidas da equipe.', direto: 'Mônica, guia e treinamentos: [link]. Sexta levo o checklist da etapa 3.' },
@@ -1362,6 +1411,26 @@ class Component extends DCLogic {
         cancel: function () { self.setState({ post: null }); }
       } : null,
       noPost: !(st.post && st.post.id === s.id),
+      brief: (function () {
+        if (s.type !== 'ag' || sDone) return null;
+        var b = self.briefs[s.id] || { people: [s.contact + ' · ' + s.company], history: s.ctx.map(function (c) { return c.k + ': ' + c.v; }), objections: [], goal: s.desc,
+          questions: [], materials: [], logistics: s.ch + (s.time ? ' · ' + s.time : ''), news: '' };
+        return { people: b.people, history: b.history, objections: b.objections, hasObj: b.objections.length > 0, goal: b.goal, questions: b.questions, hasQ: b.questions.length > 0,
+          materials: b.materials, hasMat: b.materials.length > 0, logistics: b.logistics, news: b.news, hasNews: !!b.news, generic: !self.briefs[s.id] };
+      })(),
+      briefOpen: st.briefOpen, briefLabel: st.briefOpen ? 'Recolher' : 'Ver briefing',
+      toggleBrief: function () { self.setState({ briefOpen: !self.state.briefOpen }); },
+      // Aviso de reunião próxima: relógio do mock às 10:00, mostra até 60 min antes
+      banner: (function () {
+        if (st.bannerOff) return null;
+        var next = self.items.filter(function (it) { return it.off === 0 && it.type === 'ag' && it.time > '10:00' && !st.done[it.id]; })
+          .sort(function (a, b) { return a.time.localeCompare(b.time); })[0];
+        if (!next) return null;
+        var mins = (+next.time.slice(0, 2) * 60 + +next.time.slice(3)) - 600;
+        if (mins > 60) return null;
+        return { text: 'Em ' + mins + ' min: ' + next.title + ' · ' + next.company + ' (' + next.time + ')', open: function () { self.jumpTo(next.id); self.setState({ briefOpen: true }); } };
+      })(),
+      dismissBanner: function () { self.setState({ bannerOff: true }); },
       whyOpen: st.whyOpen, whyLabel: st.whyOpen ? 'Ocultar' : 'Por quê?', whyExpanded: st.whyOpen ? 'true' : 'false',
       toggleWhy: function () { self.setState({ whyOpen: !self.state.whyOpen }); }
     };
