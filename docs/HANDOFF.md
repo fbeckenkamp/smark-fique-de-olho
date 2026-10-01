@@ -1,4 +1,4 @@
-# Estado do trabalho (atualizado em 30/09/2026)
+# Estado do trabalho (atualizado em 01/10/2026)
 
 Use este arquivo para retomar o trabalho numa nova sessão.
 
@@ -8,9 +8,9 @@ Use este arquivo para retomar o trabalho numa nova sessão.
 2. **Configuração das agent skills:** `AGENTS.md` e `docs/agents/`. As issues ficam no GitHub em https://github.com/fbeckenkamp/smark-fique-de-olho, repositório público.
 3. **As 10 recomendações foram implementadas** na `smark-home-4.0-vercel_1/fique-de-olho.html`, um PR por issue.
 
-## PRs empilhados, todos sem merge
+## PRs: todos com merge no `main` (01/10/2026)
 
-Cada PR foi criado sobre o anterior. O merge precisa ser feito nesta ordem, e o GitHub muda a base do seguinte para `main` a cada merge.
+As issues #1 a #10 estão fechadas, e os branches das issues foram apagados. O zip para a Vercel (`smark-home-4.1-vercel.zip`, fora do git) tem a mesma versão do `main`.
 
 | PR | Issue | Branch |
 |---|---|---|
