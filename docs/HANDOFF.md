@@ -1,10 +1,11 @@
-# Estado do trabalho (atualizado em 01/10/2026)
+# Estado do trabalho (atualizado em 12/10/2026)
 
 Use este arquivo para retomar o trabalho numa nova sessão.
 
 ## O que foi feito
 
 1. **Pesquisa competitiva:** `docs/research/2026-09-28-fique-de-olho-concorrencia.md`.
+1. **Especificação da tela** (funcionamento, regras de negócio e cenários de validação): `docs/spec/fique-de-olho.md`, também publicada como issue #21.
 2. **Configuração das agent skills:** `AGENTS.md` e `docs/agents/`. As issues ficam no GitHub em https://github.com/fbeckenkamp/smark-fique-de-olho, repositório público.
 3. **As 10 recomendações foram implementadas** na `smark-home-4.0-vercel_1/fique-de-olho.html`, um PR por issue.
 
